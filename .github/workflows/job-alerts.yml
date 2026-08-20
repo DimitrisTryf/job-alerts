@@ -3,7 +3,7 @@ name: Telegram job alerts
 on:
   workflow_dispatch:
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "17 * * * *"
 
 permissions:
   contents: write

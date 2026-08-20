@@ -1,6 +1,6 @@
 # DT Job Alerts Telegram publisher
 
-Checks the 11 currently live employer/ATS feeds every 15 minutes and publishes newly
+Checks the 11 currently live employer/ATS feeds once per hour and publishes newly
 discovered openings to `@dtjobalerts`. The first run records existing jobs
 without posting them, preventing an initial flood.
 
