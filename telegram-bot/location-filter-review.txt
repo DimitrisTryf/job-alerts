@@ -1,0 +1,113 @@
+PROPOSED EXCLUSIONS: clearly outside Europe and not remote
+==========================================================
+
+Atlanta, GA (Hybrid)
+Austin
+Austin, US
+Bangalore, India
+Bengaluru
+Bengaluru, India
+Buenos Aires, Argentina
+Canada
+Canada, United States
+Chicago
+Chicago, IL
+Chicago, Illinois
+Chicago, US
+Denver, US
+Egypt
+India Bangalore
+Kitchener, Canada
+Mexico City, Mexico
+Minneapolis
+Morocco
+New York Office
+New York Office; San Francisco Office; Seattle Office
+New York Office; Seattle Office
+North Carolina, US
+Pasig City, Metro Manila, Philippines
+Phoenix
+Raleigh
+San Francisco
+San Francisco Office
+San Francisco Office; Seattle Office
+San Francisco, US
+San Ramon, US
+Seattle
+Seattle Office
+South Africa
+Sydney Office
+Sydney, Australia
+São Paulo, SP, br
+Tashkent, uz
+Tempe, US
+Tokyo, Japan
+Toronto - Ontario
+United States
+USA
+Vancouver, Canada
+Western United States
+
+BORDERLINE: review manually before filtering
+============================================
+
+Anywhere, US
+  "Anywhere" looks remote, but the source does not literally say Remote.
+
+EMEA
+  Includes Europe, the Middle East, and Africa.
+
+Istanbul, İstanbul, tr
+  Transcontinental city; may be treated as Europe depending on your policy.
+
+Tbilisi, Tbilisi, ge
+  Georgia's Europe/Asia classification varies by policy.
+
+REMOTE BUT RESTRICTED OUTSIDE EUROPE: currently kept
+====================================================
+
+These satisfy the requested "Europe or remote" rule because they are explicitly
+remote. If you must be eligible to work from Europe, most should instead be
+excluded.
+
+AMER Remote
+Remote - Alberta, Canada (DNU)
+Remote - Australia
+Remote - Canada
+Remote - Colombia
+Remote - India
+Remote - Japan
+Remote - Mexico
+Remote - Ontario, Canada (DNU)
+Remote - San Francisco OR New York
+Remote - Singapore
+Remote - United Staes
+Remote - United States
+Remote - US
+Remote NA
+Remote-AMER
+Remote-Americas
+Remote-APAC
+Remote-Argentina
+Remote-Australia
+Remote-Canada
+Remote-Central America
+Remote-Indonesia
+Remote-Japan
+Remote-LATAM
+Remote-Malaysia
+Remote-Melbourne, Australia
+Remote-New Zealand
+Remote-NORAM
+Remote-Philippines
+Remote-Singapore
+Remote-South America
+Remote-Sydney, Australia
+Remote-United States
+Remote-US
+Remote-Vietnam
+Work from Home - Japan
+Work from Home - Mexico
+Work from Home - US
+Work from Home - US (Central)
+Work from Home - US (EST)

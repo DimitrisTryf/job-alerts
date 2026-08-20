@@ -1,0 +1,119 @@
+Job sources deferred pending a confirmed authoritative postedAt endpoint
+=======================================================================
+
+These companies are intentionally not implemented yet. Their current careers
+pages are custom, ambiguous, have no live vacancy available to validate, or do
+not consistently expose an employer/ATS-controlled publication date.
+
+- Kore.ai
+- Textel
+- Amelia
+- Convirza
+- Odigo
+- Evolve IP
+- Avaamo
+- OneReach
+- Haptik
+- CodeGen
+- Air Apps
+- AudioCodes
+- Diabolocom
+- Enreach
+- LeadDesk
+- Bright Pattern
+- [24]7.ai
+- Satalia
+- Creatio
+- startelelogic
+- DRUID AI
+- IntelePeer
+- USAN
+- Quiq
+- Arthur
+- Indice IT Consulting
+
+Not acceptable as authoritative employer sources
+-------------------------------------------------
+
+- Empllo (job aggregator)
+- VUX World job listings (job/discovery publisher)
+
+Implementation requirement
+--------------------------
+
+A source can move out of this file only after a live employer-controlled job or
+ATS response is verified to contain a true publication field such as
+datePosted, postedDate, first_published, publishedAt, or releasedDate.
+
+Search-engine timestamps, modification dates, application deadlines, and the
+time Job Watch first detects a listing are not acceptable substitutes.
+
+Previously configured sources requiring re-verification
+--------------------------------------------------------
+
+These Greenhouse board identifiers returned HTTP 404 during the live Telegram
+collector validation on 2026-08-20 and are disabled until their current
+employer-controlled source is verified again.
+
+- SoundHound
+- Aisera
+- Headway
+- Brightflag
+
+Supported companies to implement next
+======================================
+
+These companies passed the initial feasibility review and appear in the Android
+company registry, but do not yet have an enabled, verified backend connector.
+They should be implemented ATS-by-ATS and removed from this section only after
+their live source and authoritative posting-date field have been tested.
+
+- Microsoft
+- Snowflake
+- Cisco
+- Genesys
+- QUALCO
+- NICE
+- Epignosis
+- Cognigy
+- Stripe
+- Zoom
+- IBM
+- Sprinklr
+- Splunk
+- Avaya
+- Aloware
+- Brevity
+- Five9
+- Zendesk
+- CloudTalk
+- 8x8
+- UJET
+- Puzzel
+- Telefónica Global
+- Docker
+- Oracle
+- EPAM
+- Yellow.ai
+- Fireflies.ai
+- Voiceflow
+- boost.ai
+- Netomi
+- Moveworks
+- Atos
+- ITMAGINATION
+- Cresta
+- Invoca
+- SugarCRM
+- Worldline
+- RingCentral
+- Remofirst
+- Replicant
+- Grammarly
+- Accenture
+- Pactum
+- Sumsub
+- GLI
+- Revolut
+- Grant Thornton Greece
+- Automation Anywhere

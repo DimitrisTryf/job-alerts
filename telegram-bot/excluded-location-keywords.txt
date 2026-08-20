@@ -1,0 +1,34 @@
+# Case-insensitive substring rules for non-remote locations.
+# Explicit Remote / Work from Home postings bypass these exclusions.
+Atlanta
+Austin
+Bangalore
+Bengaluru
+Buenos Aires
+Canada
+Chicago
+Denver
+Egypt
+India
+Mexico City
+Minneapolis
+Morocco
+New York
+North Carolina
+Pasig City
+Philippines
+Phoenix
+Raleigh
+San Francisco
+San Ramon
+Seattle
+South Africa
+Sydney
+São Paulo
+Tashkent
+Tempe
+Tokyo
+Toronto
+United States
+USA
+Western United States
