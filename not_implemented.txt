@@ -57,43 +57,39 @@ employer-controlled source is verified again.
 - Headway
 - Brightflag
 
-Supported companies to implement next
-======================================
+Reviewed sources still requiring unsupported or custom access
+==============================================================
 
-These companies passed the initial feasibility review and appear in the Android
-company registry, but do not yet have an enabled, verified backend connector.
-They should be implemented ATS-by-ATS and removed from this section only after
-their live source and stable job identifier have been tested.
+Every company below was reviewed during the comprehensive connector pass. None
+has been enabled because a complete, stable employer-controlled feed has not yet
+been verified. Enabling a guessed, partial, or stale endpoint would silently
+miss jobs or create duplicate Telegram posts.
 
-- Microsoft
-- Snowflake
-- Cisco
-- QUALCO
-- NICE
-- Cognigy
-- Zoom
+Large enterprise/custom career systems requiring a dedicated connector
+-----------------------------------------------------------------------
+
 - IBM
-- Sprinklr
 - Splunk
-- Avaya
+- EPAM
+- Accenture
+- Revolut
+- Automation Anywhere
+
+No complete stable feed identified from the current public careers page
+-----------------------------------------------------------------------
+
 - Aloware
 - Brevity
-- Zendesk
-- Telefónica Global
-- Oracle
-- EPAM
 - Yellow.ai
 - Fireflies.ai
 - Voiceflow
 - boost.ai
-- Moveworks
-- Atos
-- ITMAGINATION
-- Worldline
-- Grammarly
-- Accenture
-- Pactum
 - GLI
-- Revolut
 - Grant Thornton Greece
-- Automation Anywhere
+
+Incomplete, stale, or transitioned source
+-----------------------------------------
+
+- Moveworks (careers have transitioned to ServiceNow; no separate complete feed)
+- Worldline (public RSS is limited; the complete search is dynamically loaded)
+- Grammarly (the previously known Greenhouse board now returns HTTP 404)

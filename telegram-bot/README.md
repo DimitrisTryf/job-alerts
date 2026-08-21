@@ -37,6 +37,36 @@ Non-remote locations matching a case-insensitive rule in
 `excluded-location-keywords.txt` are also recorded as seen without being posted.
 Explicit `Remote` and `Work from Home` locations bypass these keyword rules.
 
+## Validation
+
+Fetch every configured source and print one representative live opening from
+each company:
+
+```shell
+python telegram-bot/validate_sources.py
+```
+
+Each source is reported as `OK`, `EMPTY`, or `FAIL`. `EMPTY` means the source
+responded successfully but has no current openings; only `FAIL` makes the
+command exit nonzero. This command never posts to Telegram or changes
+`seen-jobs.json`.
+
+To collect and validate all jobs without printing one per source:
+
+```shell
+python telegram-bot/job_alerts.py --collect-only
+```
+
+## Code layout
+
+- `job_alerts.py` owns environment loading, deduplication state, filtering, and
+  Telegram publishing.
+- `job_alerts_lib/sources.py` is the source registry.
+- `job_alerts_lib/collector.py` runs sources concurrently and isolates failures.
+- `job_alerts_lib/connectors/` contains ATS-specific integrations.
+- `job_alerts_lib/http.py` and `job_alerts_lib/locations.py` contain shared
+  dependency-free utilities.
+
 ## Temporary channel cleanup
 
 Discover recent channel message IDs without deleting anything:
