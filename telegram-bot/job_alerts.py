@@ -16,26 +16,9 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from job_alerts_lib.collector import collect_jobs
+from job_alerts_lib.env import load_env
 from job_alerts_lib.locations import is_excluded_location, load_excluded_location_keywords
 from job_alerts_lib.sources import configured_source_ids
-
-
-def load_env(path: Path) -> None:
-    """Load simple KEY=VALUE entries without overriding real environment variables."""
-    if not path.exists():
-        return
-    for raw_line in path.read_text().splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        key = key.strip()
-        value = value.strip()
-        if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
-            value = value[1:-1]
-        if key:
-            os.environ.setdefault(key, value)
-
 
 SCRIPT_DIRECTORY = Path(__file__).parent
 load_env(SCRIPT_DIRECTORY / ".env")
@@ -44,7 +27,11 @@ CHANNEL = os.environ.get("TELEGRAM_CHANNEL", "@dtjobalerts")
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 FOUND_TIMEZONE = ZoneInfo(os.environ.get("JOB_ALERTS_TIMEZONE", "Europe/Athens"))
 STATE_PATH = SCRIPT_DIRECTORY / "seen-jobs.json"
+POST_LOG_PATH = SCRIPT_DIRECTORY / "posted-jobs.jsonl"
 EXCLUDED_LOCATIONS_PATH = SCRIPT_DIRECTORY / "excluded-location-keywords.txt"
+GENERATED_EXCLUDED_LOCATIONS_PATH = (
+    SCRIPT_DIRECTORY / "telegram-generated-excluded-location-keywords.txt"
+)
 
 
 def load_state() -> dict[str, Any]:
@@ -71,7 +58,7 @@ def save_state(
     STATE_PATH.write_text(json.dumps(state, indent=2) + "\n")
 
 
-def send_job(job: dict[str, str]) -> None:
+def send_job(job: dict[str, str]) -> int:
     if not TOKEN:
         raise RuntimeError("TELEGRAM_BOT_TOKEN is not configured")
     text = "\n".join([
@@ -99,7 +86,7 @@ def send_job(job: dict[str, str]) -> None:
                 result = json.load(response)
                 if not result.get("ok"):
                     raise RuntimeError(f"Telegram rejected the message: {result}")
-                return
+                return int(result["result"]["message_id"])
         except urllib.error.HTTPError as error:
             detail = json.loads(error.read().decode() or "{}")
             retry_after = detail.get("parameters", {}).get("retry_after")
@@ -119,6 +106,19 @@ def send_job(job: dict[str, str]) -> None:
                 continue
             raise RuntimeError("Telegram connection failed after retries") from error
     raise RuntimeError("Telegram sendMessage failed after retries")
+
+
+def record_post(job: dict[str, str], message_id: int) -> None:
+    entry = {
+        "messageId": message_id,
+        "postedAt": datetime.now(timezone.utc).isoformat(),
+        "companyName": job["companyName"],
+        "title": job["title"],
+        "location": job["location"],
+        "url": job["url"],
+    }
+    with POST_LOG_PATH.open("a") as log:
+        log.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
 def main() -> None:
@@ -152,7 +152,10 @@ def main() -> None:
     candidate_jobs = jobs if post_existing and not state["initialized"] else [
         job for job in jobs if job["id"] not in seen
     ]
-    excluded_keywords = load_excluded_location_keywords(EXCLUDED_LOCATIONS_PATH)
+    excluded_keywords = load_excluded_location_keywords(
+        EXCLUDED_LOCATIONS_PATH,
+        GENERATED_EXCLUDED_LOCATIONS_PATH,
+    )
     excluded_jobs = [
         job for job in candidate_jobs
         if is_excluded_location(job["location"], excluded_keywords)
@@ -173,7 +176,8 @@ def main() -> None:
     new_jobs = [dict(job, foundAt=found_at) for job in candidate_jobs]
     total = len(new_jobs)
     for index, job in enumerate(new_jobs, start=1):
-        send_job(job)
+        message_id = send_job(job)
+        record_post(job, message_id)
         seen.add(job["id"])
         save_state(seen, initialized_sources)
         print(f"Posted {index}/{total}: {job['companyName']} — {job['title']}", flush=True)

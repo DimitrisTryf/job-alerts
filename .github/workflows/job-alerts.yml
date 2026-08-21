@@ -21,19 +21,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Run unit tests
+        working-directory: telegram-bot
+        run: python -m unittest discover -s tests
       - name: Collect and publish new jobs
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL: "@dtjobalerts"
         run: python telegram-bot/job_alerts.py
-      - name: Save seen job IDs
+      - name: Save job alert state
         if: always()
         run: |
-          if git diff --quiet -- telegram-bot/seen-jobs.json; then
+          if test -z "$(git status --porcelain -- telegram-bot/seen-jobs.json telegram-bot/posted-jobs.jsonl)"; then
             exit 0
           fi
           git config user.name "dt-job-alerts[bot]"
           git config user.email "dt-job-alerts[bot]@users.noreply.github.com"
-          git add telegram-bot/seen-jobs.json
-          git commit -m "Update seen job IDs"
+          git add telegram-bot/seen-jobs.json telegram-bot/posted-jobs.jsonl
+          git commit -m "Update job alert state"
           git push

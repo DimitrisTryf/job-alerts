@@ -6,16 +6,33 @@ import re
 from pathlib import Path
 
 
-def load_excluded_location_keywords(path: Path) -> list[str]:
-    try:
-        return [
+GLOBAL_REMOTE_PHRASES = (
+    "anywhere in the world",
+    "anywhere worldwide",
+    "global remote",
+    "globally remote",
+    "remote - global",
+    "remote — global",
+    "remote worldwide",
+    "work from anywhere",
+    "worldwide remote",
+)
+
+
+def load_excluded_location_keywords(*paths: Path) -> list[str]:
+    keywords = []
+    for path in paths:
+        try:
+            lines = path.read_text().splitlines()
+        except FileNotFoundError:
+            continue
+        keywords.extend(
             line.casefold()
-            for raw_line in path.read_text().splitlines()
+            for raw_line in lines
             for line in [raw_line.strip()]
             if line and not line.startswith("#")
-        ]
-    except FileNotFoundError:
-        return []
+        )
+    return list(dict.fromkeys(keywords))
 
 
 def is_remote_location(location: str) -> bool:
@@ -23,8 +40,13 @@ def is_remote_location(location: str) -> bool:
     return "remote" in normalized or "work from home" in normalized
 
 
+def is_global_remote_location(location: str) -> bool:
+    normalized = " ".join(location.casefold().split())
+    return any(phrase in normalized for phrase in GLOBAL_REMOTE_PHRASES)
+
+
 def is_excluded_location(location: str, keywords: list[str]) -> bool:
-    if is_remote_location(location):
+    if is_global_remote_location(location):
         return False
     normalized = location.casefold()
     return any(

@@ -35,7 +35,37 @@ Publication dates from the employer are not required or displayed.
 
 Non-remote locations matching a case-insensitive rule in
 `excluded-location-keywords.txt` are also recorded as seen without being posted.
-Explicit `Remote` and `Work from Home` locations bypass these keyword rules.
+Region-restricted `Remote` and `Work from Home` openings do not bypass location
+exclusions. Only explicit worldwide/global remote wording is always accepted.
+
+## Daily Telegram location audit
+
+Telegram's Bot API cannot retrieve a bot's historical outgoing channel posts.
+To make the audit reliable, the publisher records each successful post in
+`posted-jobs.jsonl`, including its Telegram message ID, posting time, title,
+location, and URL. GitHub Actions checkpoints this log together with
+`seen-jobs.json`.
+
+Run the previous-day audit manually each morning:
+
+```shell
+python telegram-bot/telegram_location_audit.py
+```
+
+The date boundary uses `JOB_ALERTS_TIMEZONE` (`Europe/Athens` by default). Use
+`--date YYYY-MM-DD` to audit another local date or `--dry-run` to avoid writing
+files. The script reads every recorded Telegram job post from the requested day
+and classifies it as European, explicitly global remote, outside Europe, or
+uncertain.
+
+High-confidence non-European terms are merged into
+`telegram-generated-excluded-location-keywords.txt`, which the publisher loads in
+addition to the hand-maintained exclusion file. Ambiguous locations are written
+to the ignored `telegram-location-reviews/YYYY-MM-DD.txt` for manual review.
+
+The audit log starts with posts made after this feature is deployed; the Bot API
+cannot backfill older channel history. Run `git pull` before the morning audit so
+the local log includes the latest GitHub Actions checkpoint.
 
 ## Validation
 
@@ -64,28 +94,13 @@ python telegram-bot/job_alerts.py --collect-only
 - `job_alerts_lib/sources.py` is the source registry.
 - `job_alerts_lib/collector.py` runs sources concurrently and isolates failures.
 - `job_alerts_lib/connectors/` contains ATS-specific integrations.
-- `job_alerts_lib/http.py` and `job_alerts_lib/locations.py` contain shared
+- `job_alerts_lib/http.py`, `env.py`, and `locations.py` contain shared
   dependency-free utilities.
-
-## Temporary channel cleanup
-
-Discover recent channel message IDs without deleting anything:
-
-```shell
-python telegram-bot/cleanup_channel.py
-```
-
-Review the count, then explicitly delete those messages:
-
-```shell
-python telegram-bot/cleanup_channel.py --delete
-```
-
-Telegram only permits bots to delete messages sent less than 48 hours ago. The
-bot must retain the necessary channel administrator permissions. Telegram may
-not return a bot's own channel posts through `getUpdates`; when `--delete` is
-explicitly supplied and no IDs are found, the script posts a silent temporary
-probe and deletes the channel message-ID range up to that probe.
+- `job_alerts_lib/location_audit.py` contains conservative geographic
+  classification rules.
+- `tests/` covers filtering, global remote handling, and audit date boundaries.
+- Repository-level `docs/` contains historical research that is not loaded at
+  runtime.
 
 ## GitHub setup
 
