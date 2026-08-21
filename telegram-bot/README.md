@@ -1,8 +1,9 @@
 # DT Job Alerts Telegram publisher
 
-Checks the 11 currently live employer/ATS feeds once per hour and publishes newly
-discovered openings to `@dtjobalerts`. The first run records existing jobs
-without posting them, preventing an initial flood.
+Checks the configured employer/ATS feeds once per hour and publishes newly
+discovered openings to `@dtjobalerts`. The first run—and the first run after a
+new company source is added—records existing jobs without posting them,
+preventing an initial flood.
 
 The publisher uses Python 3.12 and only the Python standard library. There is no
 Android, Firebase, Node.js, or third-party package dependency.
@@ -14,6 +15,7 @@ Put the replacement BotFather token in `telegram-bot/.env`:
 ```text
 TELEGRAM_BOT_TOKEN=your_replacement_token
 TELEGRAM_CHANNEL=@dtjobalerts
+JOB_ALERTS_TIMEZONE=Europe/Athens
 ```
 
 The `.env` file is ignored by Git and must never be committed or shared. Real
@@ -28,8 +30,8 @@ python telegram-bot/job_alerts.py --post-existing
 This can create hundreds of channel posts. Successful posts are checkpointed so
 an interrupted run can be resumed without reposting completed jobs.
 
-Openings whose authoritative `postedAt` date is more than 14 days old are
-recorded as seen but are not posted to Telegram.
+Messages show the date the collector first discovered the opening as `Found`.
+Publication dates from the employer are not required or displayed.
 
 Non-remote locations matching a case-insensitive rule in
 `excluded-location-keywords.txt` are also recorded as seen without being posted.

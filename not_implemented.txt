@@ -1,9 +1,9 @@
-Job sources deferred pending a confirmed authoritative postedAt endpoint
-=======================================================================
+Job sources deferred pending a stable employer-controlled jobs feed
+===================================================================
 
 These companies are intentionally not implemented yet. Their current careers
 pages are custom, ambiguous, have no live vacancy available to validate, or do
-not consistently expose an employer/ATS-controlled publication date.
+not yet have a confirmed stable employer/ATS-controlled listing feed.
 
 - Kore.ai
 - Textel
@@ -41,12 +41,9 @@ Not acceptable as authoritative employer sources
 Implementation requirement
 --------------------------
 
-A source can move out of this file only after a live employer-controlled job or
-ATS response is verified to contain a true publication field such as
-datePosted, postedDate, first_published, publishedAt, or releasedDate.
-
-Search-engine timestamps, modification dates, application deadlines, and the
-time Job Watch first detects a listing are not acceptable substitutes.
+A source can move out of this file after a live employer-controlled jobs feed is
+verified to expose a stable job identifier, title, location, and application
+URL. The collector records its own discovery date as `foundAt`.
 
 Previously configured sources requiring re-verification
 --------------------------------------------------------
@@ -66,17 +63,14 @@ Supported companies to implement next
 These companies passed the initial feasibility review and appear in the Android
 company registry, but do not yet have an enabled, verified backend connector.
 They should be implemented ATS-by-ATS and removed from this section only after
-their live source and authoritative posting-date field have been tested.
+their live source and stable job identifier have been tested.
 
 - Microsoft
 - Snowflake
 - Cisco
-- Genesys
 - QUALCO
 - NICE
-- Epignosis
 - Cognigy
-- Stripe
 - Zoom
 - IBM
 - Sprinklr
@@ -84,35 +78,21 @@ their live source and authoritative posting-date field have been tested.
 - Avaya
 - Aloware
 - Brevity
-- Five9
 - Zendesk
-- CloudTalk
-- 8x8
-- UJET
-- Puzzel
 - Telefónica Global
-- Docker
 - Oracle
 - EPAM
 - Yellow.ai
 - Fireflies.ai
 - Voiceflow
 - boost.ai
-- Netomi
 - Moveworks
 - Atos
 - ITMAGINATION
-- Cresta
-- Invoca
-- SugarCRM
 - Worldline
-- RingCentral
-- Remofirst
-- Replicant
 - Grammarly
 - Accenture
 - Pactum
-- Sumsub
 - GLI
 - Revolut
 - Grant Thornton Greece
