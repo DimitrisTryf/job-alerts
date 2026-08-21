@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit yesterday's recorded Telegram job posts and update location rules."""
+"""Audit recorded Telegram job posts and update location rules."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from job_alerts_lib.env import load_env
-from job_alerts_lib.location_audit import classify_location
+from job_alerts_lib.location_audit import classify_post
 
 SCRIPT_DIRECTORY = Path(__file__).parent
 POST_LOG_PATH = SCRIPT_DIRECTORY / "posted-jobs.jsonl"
@@ -68,7 +68,7 @@ def existing_rules(path: Path) -> tuple[list[str], set[str]]:
 
 
 def write_outputs(
-    audit_date: date,
+    audit_label: str,
     candidates: set[str],
     review_rows: list[tuple[str, str, str]],
     dry_run: bool,
@@ -81,9 +81,9 @@ def write_outputs(
         "\n".join(header + ([""] if values else []) + sorted(values, key=str.casefold)) + "\n"
     )
     REVIEW_DIRECTORY.mkdir(exist_ok=True)
-    review_path = REVIEW_DIRECTORY / f"{audit_date.isoformat()}.txt"
+    review_path = REVIEW_DIRECTORY / f"{audit_label}.txt"
     rows = [
-        f"# Telegram location review for {audit_date.isoformat()}",
+        f"# Telegram location review: {audit_label}",
         "# UNKNOWN_REMOTE is not explicitly worldwide or European.",
         "# UNKNOWN could not be classified safely.",
         "",
@@ -95,38 +95,73 @@ def write_outputs(
     review_path.write_text("\n".join(rows) + "\n")
 
 
+def clear_post_log(path: Path) -> None:
+    path.write_text("# Successful Telegram channel posts, one JSON object per line.\n")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", help="Local audit date in YYYY-MM-DD; defaults to yesterday")
+    parser.add_argument("--all", action="store_true", help="Audit every pending recorded post")
+    parser.add_argument(
+        "--consume",
+        action="store_true",
+        help="Clear the post log after a successful --all audit",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Print without writing files")
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.all and args.date:
+        parser.error("--all and --date cannot be used together")
+    if args.consume and not args.all:
+        parser.error("--consume requires --all")
+    if args.consume and args.dry_run:
+        parser.error("--consume cannot be combined with --dry-run")
+    return args
 
 
 def main() -> None:
     load_env(SCRIPT_DIRECTORY / ".env")
     args = parse_args()
     zone = ZoneInfo(os.environ.get("JOB_ALERTS_TIMEZONE", "Europe/Athens"))
-    audit_date = date.fromisoformat(args.date) if args.date else datetime.now(zone).date() - timedelta(days=1)
-    posts = posts_for_date(load_posts(POST_LOG_PATH), audit_date, zone)
+    all_posts = load_posts(POST_LOG_PATH)
+    if args.all:
+        posts = all_posts
+        audit_label = f"pending-through-{datetime.now(zone).date().isoformat()}"
+        audit_description = "all pending records"
+    else:
+        audit_date = (
+            date.fromisoformat(args.date)
+            if args.date
+            else datetime.now(zone).date() - timedelta(days=1)
+        )
+        posts = posts_for_date(all_posts, audit_date, zone)
+        audit_label = audit_date.isoformat()
+        audit_description = audit_date.isoformat()
 
     counts: dict[str, int] = {}
     candidates = set()
     review_rows = []
     for post in posts:
         location = str(post.get("location") or "Location not specified")
-        classification, terms = classify_location(location)
+        title = str(post.get("title") or "")
+        url = str(post.get("url") or "")
+        classification, terms = classify_post(location, title, url)
         counts[classification] = counts.get(classification, 0) + 1
         candidates.update(terms)
         if classification.startswith("UNKNOWN"):
-            review_rows.append((classification, location, str(post.get("title") or "")))
-        print(f"{classification:16} {location} | {post.get('title', '')}")
+            review_rows.append((classification, location, title))
+        print(f"{classification:16} {location} | {title}")
 
-    write_outputs(audit_date, candidates, review_rows, args.dry_run)
+    write_outputs(audit_label, candidates, review_rows, args.dry_run)
+    if args.consume:
+        clear_post_log(POST_LOG_PATH)
     summary = ", ".join(f"{key}={value}" for key, value in sorted(counts.items())) or "none"
     print(
-        f"Checked {len(posts)} Telegram posts for {audit_date}: {summary}. "
+        f"Checked {len(posts)} Telegram posts for {audit_description}: {summary}. "
         f"Generated {len(candidates)} exclusion candidates; {len(review_rows)} need review."
     )
+    if args.consume:
+        print("Consumed all audited records from posted-jobs.jsonl.")
 
 
 if __name__ == "__main__":

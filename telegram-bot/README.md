@@ -46,17 +46,18 @@ To make the audit reliable, the publisher records each successful post in
 location, and URL. GitHub Actions checkpoints this log together with
 `seen-jobs.json`.
 
-Run the previous-day audit manually each morning:
+Process and consume every pending record manually:
 
 ```shell
-python telegram-bot/telegram_location_audit.py
+python telegram-bot/telegram_location_audit.py --all --consume
 ```
 
-The date boundary uses `JOB_ALERTS_TIMEZONE` (`Europe/Athens` by default). Use
-`--date YYYY-MM-DD` to audit another local date or `--dry-run` to avoid writing
-files. The script reads every recorded Telegram job post from the requested day
-and classifies it as European, explicitly global remote, outside Europe, or
-uncertain.
+The command clears `posted-jobs.jsonl` only after successfully writing its rule
+and review outputs. Commit and push the emptied log with accepted rule changes;
+otherwise the consumed records return on the next pull. For a non-consuming
+calendar-day review, omit `--all --consume`; the default is yesterday in
+`JOB_ALERTS_TIMEZONE` (`Europe/Athens`). Use `--date YYYY-MM-DD` for another day
+or `--dry-run` to avoid writes.
 
 High-confidence non-European terms are merged into
 `telegram-generated-excluded-location-keywords.txt`, which the publisher loads in

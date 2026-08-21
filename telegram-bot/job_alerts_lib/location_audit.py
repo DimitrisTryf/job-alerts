@@ -16,7 +16,7 @@ EUROPE_TERMS = (
     "norway", "poland", "portugal", "romania", "san marino", "serbia",
     "slovakia", "slovenia", "spain", "sweden", "switzerland", "turkey",
     "türkiye", "ukraine", "united kingdom", "vatican", "emea", "eu remote",
-    "remote - eu", "remote — eu", "amsterdam", "athens", "barcelona",
+    "remote - eu", "remote — eu", "gb", "ro", "amsterdam", "athens", "barcelona",
     "belgrade", "berlin", "bratislava", "brussels", "bucharest", "budapest",
     "copenhagen", "dublin", "helsinki", "lisbon", "limassol", "london",
     "madrid", "munich", "oslo", "paris", "prague", "sofia", "stockholm",
@@ -26,12 +26,12 @@ EUROPE_TERMS = (
 
 # Ambiguous names such as Georgia are intentionally absent.
 OUTSIDE_EUROPE_TERMS = (
-    "united states", "usa", "u.s.", "us only", "remote - us", "remote — us",
+    "united states", "usa", "u.s.", "us", "us only", "remote - us", "remote — us",
     "canada", "mexico", "brazil", "argentina", "colombia", "chile", "peru",
     "india", "pakistan", "bangladesh", "philippines", "singapore", "malaysia",
     "indonesia", "china", "japan", "south korea", "taiwan", "thailand",
     "vietnam", "australia", "new zealand", "south africa", "egypt", "morocco",
-    "nigeria", "kenya", "saudi arabia", "united arab emirates", "uae", "israel",
+    "nigeria", "kenya", "qatar", "saudi arabia", "united arab emirates", "uae", "israel",
     "latin america", "latam", "north america", "apac", "asia-pacific",
     "atlanta", "austin", "bangalore", "bengaluru", "boston", "chicago",
     "denver", "los angeles", "mexico city", "minneapolis", "new york",
@@ -58,3 +58,14 @@ def classify_location(location: str) -> tuple[str, list[str]]:
     if is_remote_location(location):
         return "UNKNOWN_REMOTE", []
     return "UNKNOWN", []
+
+
+def classify_post(location: str, title: str, url: str) -> tuple[str, list[str]]:
+    """Classify a post, using title/URL only when its location is inconclusive."""
+    classification, terms = classify_location(location)
+    if not classification.startswith("UNKNOWN"):
+        return classification, terms
+    evidence_classification, evidence_terms = classify_location(f"{title} {url}")
+    if evidence_classification in {"EUROPE", "OUTSIDE_EUROPE", "GLOBAL_REMOTE"}:
+        return evidence_classification, evidence_terms
+    return classification, terms
