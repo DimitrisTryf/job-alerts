@@ -1,1 +1,2 @@
 # Jobs filtered before Telegram publishing, one JSON object per line.
+{"jobId": "cisco:/job/Bangalore-India/Software-Engineer_2014912", "filteredAt": "2026-08-22T18:48:28.848627+00:00", "reason": "location", "matchedTerms": ["bangalore", "india"], "companyName": "Cisco", "title": "Software Engineer", "location": "Bangalore, India", "url": "https://cisco.wd5.myworkdayjobs.com/en-US/Cisco_Careers/job/Bangalore-India/Software-Engineer_2014912"}
