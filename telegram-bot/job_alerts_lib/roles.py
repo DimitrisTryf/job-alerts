@@ -20,8 +20,12 @@ def load_excluded_job_title_keywords(path: Path) -> list[str]:
 
 
 def is_excluded_job_title(title: str, keywords: list[str]) -> bool:
+    return bool(matching_excluded_job_title_keywords(title, keywords))
+
+
+def matching_excluded_job_title_keywords(title: str, keywords: list[str]) -> list[str]:
     normalized = " ".join(title.casefold().split())
-    return any(
-        re.search(rf"(?<!\w){re.escape(keyword)}(?!\w)", normalized)
-        for keyword in keywords
-    )
+    return [
+        keyword for keyword in keywords
+        if re.search(rf"(?<!\w){re.escape(keyword)}(?!\w)", normalized)
+    ]

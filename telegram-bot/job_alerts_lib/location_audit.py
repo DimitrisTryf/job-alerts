@@ -5,7 +5,11 @@ from __future__ import annotations
 import re
 import urllib.parse
 
-from job_alerts_lib.locations import is_global_remote_location, is_remote_location
+from job_alerts_lib.locations import (
+    is_excluded_location,
+    is_global_remote_location,
+    is_remote_location,
+)
 
 EUROPE_TERMS = (
     "albania", "andorra", "armenia", "austria", "azerbaijan", "belarus",
@@ -77,3 +81,9 @@ def classify_post(location: str, title: str, url: str) -> tuple[str, list[str]]:
     if evidence_classification in {"EUROPE", "OUTSIDE_EUROPE", "GLOBAL_REMOTE"}:
         return evidence_classification, evidence_terms
     return classification, terms
+
+
+def should_exclude_location(location: str, keywords: list[str]) -> bool:
+    """Apply exclusions while retaining jobs with an explicit European option."""
+    classification, _ = classify_location(location)
+    return classification != "EUROPE" and is_excluded_location(location, keywords)

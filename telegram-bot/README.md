@@ -45,6 +45,16 @@ and accounting roles. The manual review may inspect an official job description
 to classify an ambiguous title, but runtime filtering remains title-based so the
 hourly job does not need to scrape every job-detail page.
 
+When an ATS exposes multiple location names, the collector keeps and displays
+all of them. A posting with both European and non-European options remains
+eligible. Some Workday feeds expose only a count such as `2 Locations`; their
+public API does not always disclose every name.
+
+Every job rejected by a role or location rule is appended once to
+`filtered-jobs.jsonl` with its filter reason, matched terms, company, title,
+location, and official URL. GitHub Actions checkpoints this file so false positives can be
+reviewed later without reposting them.
+
 ## Daily Telegram location and role audit
 
 Telegram's Bot API cannot retrieve a bot's historical outgoing channel posts.

@@ -32,11 +32,11 @@ jobs:
       - name: Save job alert state
         if: always()
         run: |
-          if test -z "$(git status --porcelain -- telegram-bot/seen-jobs.json telegram-bot/posted-jobs.jsonl)"; then
+          if test -z "$(git status --porcelain -- telegram-bot/seen-jobs.json telegram-bot/posted-jobs.jsonl telegram-bot/filtered-jobs.jsonl)"; then
             exit 0
           fi
           git config user.name "dt-job-alerts[bot]"
           git config user.email "dt-job-alerts[bot]@users.noreply.github.com"
-          git add telegram-bot/seen-jobs.json telegram-bot/posted-jobs.jsonl
+          git add telegram-bot/seen-jobs.json telegram-bot/posted-jobs.jsonl telegram-bot/filtered-jobs.jsonl
           git commit -m "Update job alert state"
           git push

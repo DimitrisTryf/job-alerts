@@ -8,7 +8,11 @@ import unittest
 from zoneinfo import ZoneInfo
 
 from job_alerts_lib.locations import is_excluded_location
-from job_alerts_lib.location_audit import classify_location, classify_post
+from job_alerts_lib.location_audit import (
+    classify_location,
+    classify_post,
+    should_exclude_location,
+)
 from telegram_location_audit import clear_post_log, load_posts, posts_for_date
 
 
@@ -34,6 +38,12 @@ class LocationClassificationTests(unittest.TestCase):
         self.assertEqual(
             classify_location("London, United Kingdom; New York, United States")[0],
             "EUROPE",
+        )
+        self.assertFalse(
+            should_exclude_location(
+                "London, United Kingdom; New York, United States",
+                ["new york", "united states"],
+            )
         )
 
     def test_ambiguous_georgia_is_not_assumed_european(self) -> None:

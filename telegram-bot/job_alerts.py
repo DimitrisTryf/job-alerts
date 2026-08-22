@@ -17,8 +17,17 @@ from zoneinfo import ZoneInfo
 
 from job_alerts_lib.collector import collect_jobs
 from job_alerts_lib.env import load_env
-from job_alerts_lib.locations import is_excluded_location, load_excluded_location_keywords
-from job_alerts_lib.roles import is_excluded_job_title, load_excluded_job_title_keywords
+from job_alerts_lib.filter_audit import record_filtered_jobs
+from job_alerts_lib.location_audit import should_exclude_location
+from job_alerts_lib.locations import (
+    load_excluded_location_keywords,
+    matching_excluded_location_keywords,
+)
+from job_alerts_lib.roles import (
+    is_excluded_job_title,
+    load_excluded_job_title_keywords,
+    matching_excluded_job_title_keywords,
+)
 from job_alerts_lib.sources import configured_source_ids
 
 SCRIPT_DIRECTORY = Path(__file__).parent
@@ -29,6 +38,7 @@ TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 FOUND_TIMEZONE = ZoneInfo(os.environ.get("JOB_ALERTS_TIMEZONE", "Europe/Athens"))
 STATE_PATH = SCRIPT_DIRECTORY / "seen-jobs.json"
 POST_LOG_PATH = SCRIPT_DIRECTORY / "posted-jobs.jsonl"
+FILTERED_JOBS_LOG_PATH = SCRIPT_DIRECTORY / "filtered-jobs.jsonl"
 EXCLUDED_LOCATIONS_PATH = SCRIPT_DIRECTORY / "excluded-location-keywords.txt"
 GENERATED_EXCLUDED_LOCATIONS_PATH = (
     SCRIPT_DIRECTORY / "telegram-generated-excluded-location-keywords.txt"
@@ -164,6 +174,15 @@ def main() -> None:
         if not is_excluded_job_title(job["title"], excluded_title_keywords)
     ]
     if excluded_role_jobs:
+        matched_terms = {
+            job["id"]: matching_excluded_job_title_keywords(
+                job["title"], excluded_title_keywords
+            )
+            for job in excluded_role_jobs
+        }
+        record_filtered_jobs(
+            FILTERED_JOBS_LOG_PATH, excluded_role_jobs, "role", matched_terms
+        )
         seen.update(job["id"] for job in excluded_role_jobs)
         save_state(seen, initialized_sources)
         print(
@@ -176,13 +195,22 @@ def main() -> None:
     )
     excluded_jobs = [
         job for job in candidate_jobs
-        if is_excluded_location(job["location"], excluded_keywords)
+        if should_exclude_location(job["location"], excluded_keywords)
     ]
     candidate_jobs = [
         job for job in candidate_jobs
-        if not is_excluded_location(job["location"], excluded_keywords)
+        if not should_exclude_location(job["location"], excluded_keywords)
     ]
     if excluded_jobs:
+        matched_terms = {
+            job["id"]: matching_excluded_location_keywords(
+                job["location"], excluded_keywords
+            )
+            for job in excluded_jobs
+        }
+        record_filtered_jobs(
+            FILTERED_JOBS_LOG_PATH, excluded_jobs, "location", matched_terms
+        )
         seen.update(job["id"] for job in excluded_jobs)
         save_state(seen, initialized_sources)
         print(

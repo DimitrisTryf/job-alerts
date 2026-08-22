@@ -46,10 +46,14 @@ def is_global_remote_location(location: str) -> bool:
 
 
 def is_excluded_location(location: str, keywords: list[str]) -> bool:
+    return bool(matching_excluded_location_keywords(location, keywords))
+
+
+def matching_excluded_location_keywords(location: str, keywords: list[str]) -> list[str]:
     if is_global_remote_location(location):
-        return False
+        return []
     normalized = location.casefold()
-    return any(
-        re.search(rf"(?<!\w){re.escape(keyword)}(?!\w)", normalized)
-        for keyword in keywords
-    )
+    return [
+        keyword for keyword in keywords
+        if re.search(rf"(?<!\w){re.escape(keyword)}(?!\w)", normalized)
+    ]
