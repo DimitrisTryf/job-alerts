@@ -45,7 +45,7 @@
     "zendesk",
     "zoom"
   ],
-  "updatedAt": "2026-08-22T03:08:20.560615+00:00",
+  "updatedAt": "2026-08-22T04:48:54.506398+00:00",
   "seenIds": [
     "8x8:/job/Cebu-8x8-Asia/Senior-Full-Stack-Engineer--Java-_R2269",
     "8x8:/job/Cebu-8x8-Asia/XMLNAME-Net-Senior-Software-Engineer_R2764-1",
@@ -1037,6 +1037,7 @@
     "cisco:/job/Bangalore-India/Software-Engineer---Backend---AI-Integration_2023508",
     "cisco:/job/Bangalore-India/Software-Engineer---Backend--8-to-12-Yrs-_2022020-1",
     "cisco:/job/Bangalore-India/Software-Engineer---C---Embedded--Multithreading---Netconf-4---8-years_2018322-1",
+    "cisco:/job/Bangalore-India/Software-Engineer---Cisco-IQ---Bangalore_2023390-1",
     "cisco:/job/Bangalore-India/Software-Engineer---Customer-Experience---SDK---L2-L3_2015830",
     "cisco:/job/Bangalore-India/Software-Engineer---Go-Lang--API-Gateway--KONG--OAuth2---9---12-yrs_2019479",
     "cisco:/job/Bangalore-India/Software-Engineer---Golang--AWS--K8-s--Microservices---8-to-11-Years---Bangalore_2021643",
@@ -4967,6 +4968,7 @@
     "microsoft:200050103",
     "microsoft:200050110",
     "microsoft:200050112",
+    "microsoft:200050113",
     "microsoft:200050115",
     "microsoft:200050116",
     "microsoft:200050129",
