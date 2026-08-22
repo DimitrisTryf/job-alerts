@@ -2,9 +2,27 @@
 # Review changes before committing them. Entries are matched case-insensitively.
 
 australia
+amer remote
+bangalore
+br
+brazil
+caracas
+canada
+china
+colombia
+india
+lima
+mexico
+montréal
+pe
+peru
 qatar
 remote - us
+saudi arabia
 san jose
+seattle
+taiwan
 thailand
 united arab emirates
 us
+ve

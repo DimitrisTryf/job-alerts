@@ -1,0 +1,19 @@
+# Case-insensitive whole-word or phrase rules for unwanted job titles.
+# Keep these title-specific. The manual review may inspect descriptions as evidence.
+
+accountant
+accounting
+accounts payable
+accounts receivable
+hr
+human resources
+people & culture
+people and culture
+people business partner
+people country consultant
+people operations
+people partner
+px business partner
+recruiter
+recruiting
+talent acquisition

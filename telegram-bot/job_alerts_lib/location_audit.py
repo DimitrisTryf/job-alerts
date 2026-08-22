@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import urllib.parse
 
 from job_alerts_lib.locations import is_global_remote_location, is_remote_location
 
@@ -16,7 +17,7 @@ EUROPE_TERMS = (
     "norway", "poland", "portugal", "romania", "san marino", "serbia",
     "slovakia", "slovenia", "spain", "sweden", "switzerland", "turkey",
     "türkiye", "ukraine", "united kingdom", "vatican", "emea", "eu remote",
-    "remote - eu", "remote — eu", "gb", "ro", "amsterdam", "athens", "barcelona",
+    "remote - eu", "remote — eu", "es", "gb", "ro", "amsterdam", "athens", "barcelona",
     "belgrade", "berlin", "bratislava", "brussels", "bucharest", "budapest",
     "copenhagen", "dublin", "helsinki", "lisbon", "limassol", "london",
     "madrid", "munich", "oslo", "paris", "prague", "sofia", "stockholm",
@@ -27,14 +28,16 @@ EUROPE_TERMS = (
 # Ambiguous names such as Georgia are intentionally absent.
 OUTSIDE_EUROPE_TERMS = (
     "united states", "usa", "u.s.", "us", "us only", "remote - us", "remote — us",
-    "canada", "mexico", "brazil", "argentina", "colombia", "chile", "peru",
+    "canada", "mexico", "brazil", "br", "argentina", "colombia", "chile",
+    "peru", "pe", "venezuela", "ve",
     "india", "pakistan", "bangladesh", "philippines", "singapore", "malaysia",
     "indonesia", "china", "japan", "south korea", "taiwan", "thailand",
     "vietnam", "australia", "new zealand", "south africa", "egypt", "morocco",
-    "nigeria", "kenya", "qatar", "saudi arabia", "united arab emirates", "uae", "israel",
-    "latin america", "latam", "north america", "apac", "asia-pacific",
+    "nigeria", "kenya", "qatar", "saudi arabia", "sau", "united arab emirates", "uae", "israel",
+    "latin america", "latam", "amer remote", "north america", "apac", "asia-pacific",
     "atlanta", "austin", "bangalore", "bengaluru", "boston", "chicago",
-    "denver", "los angeles", "mexico city", "minneapolis", "new york",
+    "caracas", "denver", "lima", "los angeles", "mexico city", "minneapolis",
+    "montréal", "new york",
     "phoenix", "raleigh", "san francisco", "san jose", "san ramon", "seattle",
     "sydney", "são paulo", "tashkent", "tempe", "tokyo", "toronto", "vancouver",
 )
@@ -65,7 +68,12 @@ def classify_post(location: str, title: str, url: str) -> tuple[str, list[str]]:
     classification, terms = classify_location(location)
     if not classification.startswith("UNKNOWN"):
         return classification, terms
-    evidence_classification, evidence_terms = classify_location(f"{title} {url}")
+    decoded_url = urllib.parse.unquote(url)
+    # Workday's UI locale is not job-location evidence. Without removing it,
+    # every vague `/en-US/` posting appears to be a US-only role.
+    decoded_url = re.sub(r"/en-[a-z]{2}/", "/", decoded_url, flags=re.IGNORECASE)
+    url_evidence = re.sub(r"[-_/]+", " ", decoded_url)
+    evidence_classification, evidence_terms = classify_location(f"{title} {url_evidence}")
     if evidence_classification in {"EUROPE", "OUTSIDE_EUROPE", "GLOBAL_REMOTE"}:
         return evidence_classification, evidence_terms
     return classification, terms

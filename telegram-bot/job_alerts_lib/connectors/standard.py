@@ -17,11 +17,18 @@ def fetch_greenhouse(company_id: str, company_name: str, board: str) -> list[dic
     jobs = []
     for job in listing["jobs"]:
         departments = job.get("departments") or []
+        location = (job.get("location") or {}).get("name") or ""
+        if location.strip().casefold() in {"location", "n/a", "not specified"}:
+            office_names = [
+                str(office.get("name") or "").strip()
+                for office in job.get("offices") or []
+            ]
+            location = "; ".join(dict.fromkeys(name for name in office_names if name))
         jobs.append({
             "id": f"{company_id}:{job['id']}",
             "companyName": company_name,
             "title": job["title"],
-            "location": (job.get("location") or {}).get("name") or "Location not specified",
+            "location": location or "Location not specified",
             "team": departments[0].get("name", "Other") if departments else "Other",
             "url": job["absolute_url"],
         })

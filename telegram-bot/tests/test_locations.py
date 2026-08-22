@@ -62,6 +62,32 @@ class LocationClassificationTests(unittest.TestCase):
             "OUTSIDE_EUROPE",
         )
 
+    def test_workday_ui_locale_is_not_location_evidence(self) -> None:
+        self.assertEqual(
+            classify_post(
+                "Remote",
+                "Software Engineer",
+                "https://example.myworkdayjobs.com/en-US/site/job/Remote/role",
+            )[0],
+            "UNKNOWN_REMOTE",
+        )
+
+    def test_hyphenated_url_location_is_evidence(self) -> None:
+        self.assertEqual(
+            classify_post(
+                "2 Locations",
+                "Senior Data Scientist",
+                "https://example.myworkdayjobs.com/en-US/site/job/San-Jose-CA/role",
+            )[0],
+            "OUTSIDE_EUROPE",
+        )
+
+    def test_country_codes_from_reviewed_ats_locations(self) -> None:
+        self.assertEqual(classify_location("GRANADA, ES")[0], "EUROPE")
+        self.assertEqual(classify_location("Remote (SAU)")[0], "OUTSIDE_EUROPE")
+        self.assertEqual(classify_location("LIMA, PE")[0], "OUTSIDE_EUROPE")
+        self.assertEqual(classify_location("BR")[0], "OUTSIDE_EUROPE")
+
     def test_selects_posts_by_local_calendar_date(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "posts.jsonl"

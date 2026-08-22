@@ -38,7 +38,14 @@ Non-remote locations matching a case-insensitive rule in
 Region-restricted `Remote` and `Work from Home` openings do not bypass location
 exclusions. Only explicit worldwide/global remote wording is always accepted.
 
-## Daily Telegram location audit
+Job titles matching a case-insensitive whole-word or phrase rule in
+`excluded-job-title-keywords.txt` are recorded as seen without being posted.
+The initial rules exclude HR, recruiting, talent-acquisition, people-operations,
+and accounting roles. The manual review may inspect an official job description
+to classify an ambiguous title, but runtime filtering remains title-based so the
+hourly job does not need to scrape every job-detail page.
+
+## Daily Telegram location and role audit
 
 Telegram's Bot API cannot retrieve a bot's historical outgoing channel posts.
 To make the audit reliable, the publisher records each successful post in
@@ -95,7 +102,7 @@ python telegram-bot/job_alerts.py --collect-only
 - `job_alerts_lib/sources.py` is the source registry.
 - `job_alerts_lib/collector.py` runs sources concurrently and isolates failures.
 - `job_alerts_lib/connectors/` contains ATS-specific integrations.
-- `job_alerts_lib/http.py`, `env.py`, and `locations.py` contain shared
+- `job_alerts_lib/http.py`, `env.py`, `locations.py`, and `roles.py` contain shared
   dependency-free utilities.
 - `job_alerts_lib/location_audit.py` contains conservative geographic
   classification rules.

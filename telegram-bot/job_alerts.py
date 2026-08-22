@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 from job_alerts_lib.collector import collect_jobs
 from job_alerts_lib.env import load_env
 from job_alerts_lib.locations import is_excluded_location, load_excluded_location_keywords
+from job_alerts_lib.roles import is_excluded_job_title, load_excluded_job_title_keywords
 from job_alerts_lib.sources import configured_source_ids
 
 SCRIPT_DIRECTORY = Path(__file__).parent
@@ -32,6 +33,7 @@ EXCLUDED_LOCATIONS_PATH = SCRIPT_DIRECTORY / "excluded-location-keywords.txt"
 GENERATED_EXCLUDED_LOCATIONS_PATH = (
     SCRIPT_DIRECTORY / "telegram-generated-excluded-location-keywords.txt"
 )
+EXCLUDED_JOB_TITLES_PATH = SCRIPT_DIRECTORY / "excluded-job-title-keywords.txt"
 
 
 def load_state() -> dict[str, Any]:
@@ -152,6 +154,22 @@ def main() -> None:
     candidate_jobs = jobs if post_existing and not state["initialized"] else [
         job for job in jobs if job["id"] not in seen
     ]
+    excluded_title_keywords = load_excluded_job_title_keywords(EXCLUDED_JOB_TITLES_PATH)
+    excluded_role_jobs = [
+        job for job in candidate_jobs
+        if is_excluded_job_title(job["title"], excluded_title_keywords)
+    ]
+    candidate_jobs = [
+        job for job in candidate_jobs
+        if not is_excluded_job_title(job["title"], excluded_title_keywords)
+    ]
+    if excluded_role_jobs:
+        seen.update(job["id"] for job in excluded_role_jobs)
+        save_state(seen, initialized_sources)
+        print(
+            f"Marked {len(excluded_role_jobs)} excluded-role openings as seen; none were sent.",
+            flush=True,
+        )
     excluded_keywords = load_excluded_location_keywords(
         EXCLUDED_LOCATIONS_PATH,
         GENERATED_EXCLUDED_LOCATIONS_PATH,
@@ -184,7 +202,7 @@ def main() -> None:
         time.sleep(1.1)
     print(
         f"Checked {len(jobs)} jobs; posted {len(new_jobs)} new openings; "
-        f"filtered {len(excluded_jobs)} by location."
+        f"filtered {len(excluded_role_jobs)} by role and {len(excluded_jobs)} by location."
     )
 
 
