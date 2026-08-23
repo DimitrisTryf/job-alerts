@@ -47,8 +47,9 @@ hourly job does not need to scrape every job-detail page.
 
 When an ATS exposes multiple location names, the collector keeps and displays
 all of them. A posting with both European and non-European options remains
-eligible. Some Workday feeds expose only a count such as `2 Locations`; their
-public API does not always disclose every name.
+eligible. When Workday exposes only a count such as `2 Locations`, the collector
+shows the primary location encoded in the official job URL plus the undisclosed
+additional count, for example `San Jose, California, US (+1 additional location)`.
 
 Every job rejected by a role or location rule is appended once to
 `filtered-jobs.jsonl` with its filter reason, matched terms, company, title,

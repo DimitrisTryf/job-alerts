@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from html.parser import HTMLParser
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -10,6 +11,30 @@ from typing import Any
 
 from job_alerts_lib.http import get_json, get_text, post_json
 from job_alerts_lib.locations import is_remote_location
+
+
+def workday_location(locations_text: str, external_path: str) -> str:
+    """Replace an opaque Workday location count with its URL's primary location."""
+    match = re.fullmatch(r"\s*(\d+)\s+Locations?\s*", locations_text, re.IGNORECASE)
+    if not match or int(match.group(1)) < 2:
+        return locations_text
+    path_parts = urllib.parse.unquote(external_path).strip("/").split("/")
+    try:
+        location_slug = path_parts[path_parts.index("job") + 1]
+    except (ValueError, IndexError):
+        return locations_text
+    words = [word for word in location_slug.split("-") if word]
+    if len(words) >= 4:
+        primary = ", ".join((" ".join(words[:-2]), words[-2], words[-1]))
+    elif len(words) == 3 and words[0].casefold() == "remote":
+        primary = ", ".join(words)
+    elif len(words) >= 2:
+        primary = ", ".join((" ".join(words[:-1]), words[-1]))
+    else:
+        return locations_text
+    additional_count = int(match.group(1)) - 1
+    noun = "location" if additional_count == 1 else "locations"
+    return f"{primary} (+{additional_count} additional {noun})"
 
 
 def fetch_workday(
@@ -42,11 +67,12 @@ def fetch_workday(
             title = job.get("title")
             if not external_path or not title:
                 continue
+            location = job.get("locationsText") or "Location not specified"
             jobs.append({
                 "id": f"{company_id}:{external_path}",
                 "companyName": company_name,
                 "title": title.strip(),
-                "location": job.get("locationsText") or "Location not specified",
+                "location": workday_location(location, external_path),
                 "team": "Other",
                 "url": f"{host}/en-US/{encoded_site}{external_path}",
             })
