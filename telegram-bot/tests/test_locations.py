@@ -98,6 +98,11 @@ class LocationClassificationTests(unittest.TestCase):
         self.assertEqual(classify_location("LIMA, PE")[0], "OUTSIDE_EUROPE")
         self.assertEqual(classify_location("BR")[0], "OUTSIDE_EUROPE")
 
+    def test_reviewed_region_abbreviations_and_city(self) -> None:
+        self.assertEqual(classify_location("Remote-UK&I")[0], "EUROPE")
+        self.assertEqual(classify_location("Remote-NORAM")[0], "OUTSIDE_EUROPE")
+        self.assertEqual(classify_location("Erlangen, BY, DE, 91052")[0], "EUROPE")
+
     def test_selects_posts_by_local_calendar_date(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "posts.jsonl"
