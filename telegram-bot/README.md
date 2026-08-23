@@ -34,12 +34,12 @@ Messages show the date the collector first discovered the opening as `Found`.
 Publication dates from the employer are not required or displayed.
 
 Non-remote locations matching a case-insensitive rule in
-`excluded-location-keywords.txt` are also recorded as seen without being posted.
+`config/excluded-location-keywords.txt` are also recorded as seen without being posted.
 Region-restricted `Remote` and `Work from Home` openings do not bypass location
 exclusions. Only explicit worldwide/global remote wording is always accepted.
 
 Job titles matching a case-insensitive whole-word or phrase rule in
-`excluded-job-title-keywords.txt` are recorded as seen without being posted.
+`config/excluded-job-title-keywords.txt` are recorded as seen without being posted.
 The initial rules exclude HR, recruiting, talent-acquisition, people-operations,
 and accounting roles. The manual review may inspect an official job description
 to classify an ambiguous title, but runtime filtering remains title-based so the
@@ -52,7 +52,7 @@ shows the primary location encoded in the official job URL plus the undisclosed
 additional count, for example `San Jose, California, US (+1 additional location)`.
 
 Every job rejected by a role or location rule is appended once to
-`filtered-jobs.jsonl` with its filter reason, matched terms, company, title,
+`data/filtered-jobs.jsonl` with its filter reason, matched terms, company, title,
 location, and official URL. GitHub Actions checkpoints this file so false positives can be
 reviewed later without reposting them.
 
@@ -60,9 +60,9 @@ reviewed later without reposting them.
 
 Telegram's Bot API cannot retrieve a bot's historical outgoing channel posts.
 To make the audit reliable, the publisher records each successful post in
-`posted-jobs.jsonl`, including its Telegram message ID, posting time, title,
+`data/posted-jobs.jsonl`, including its Telegram message ID, posting time, title,
 location, and URL. GitHub Actions checkpoints this log together with
-`seen-jobs.json`.
+`data/seen-jobs.json`.
 
 Process and consume every pending record manually:
 
@@ -70,7 +70,7 @@ Process and consume every pending record manually:
 python telegram-bot/telegram_location_audit.py --all --consume
 ```
 
-The command clears `posted-jobs.jsonl` only after successfully writing its rule
+The command clears `data/posted-jobs.jsonl` only after successfully writing its rule
 and review outputs. Commit and push the emptied log with accepted rule changes;
 otherwise the consumed records return on the next pull. For a non-consuming
 calendar-day review, omit `--all --consume`; the default is yesterday in
@@ -78,9 +78,9 @@ calendar-day review, omit `--all --consume`; the default is yesterday in
 or `--dry-run` to avoid writes.
 
 High-confidence non-European terms are merged into
-`telegram-generated-excluded-location-keywords.txt`, which the publisher loads in
+`config/generated-excluded-location-keywords.txt`, which the publisher loads in
 addition to the hand-maintained exclusion file. Ambiguous locations are written
-to the ignored `telegram-location-reviews/YYYY-MM-DD.txt` for manual review.
+to the ignored `data/reviews/YYYY-MM-DD.txt` for manual review.
 
 The audit log starts with posts made after this feature is deployed; the Bot API
 cannot backfill older channel history. Run `git pull` before the morning audit so
@@ -98,7 +98,7 @@ python telegram-bot/validate_sources.py
 Each source is reported as `OK`, `EMPTY`, or `FAIL`. `EMPTY` means the source
 responded successfully but has no current openings; only `FAIL` makes the
 command exit nonzero. This command never posts to Telegram or changes
-`seen-jobs.json`.
+`data/seen-jobs.json`.
 
 To collect and validate all jobs without printing one per source:
 
@@ -110,6 +110,8 @@ python telegram-bot/job_alerts.py --collect-only
 
 - `job_alerts.py` owns environment loading, deduplication state, filtering, and
   Telegram publishing.
+- `config/` contains human-approved and audit-generated filtering rules.
+- `data/` contains persistent deduplication and job-review state.
 - `job_alerts_lib/sources.py` is the source registry.
 - `job_alerts_lib/collector.py` runs sources concurrently and isolates failures.
 - `job_alerts_lib/connectors/` contains ATS-specific integrations.
@@ -128,7 +130,7 @@ python telegram-bot/job_alerts.py --collect-only
 3. Add a repository secret named `TELEGRAM_BOT_TOKEN` containing the replacement
    token from BotFather. Never commit the token to this repository.
 4. Open **Actions → Telegram job alerts → Run workflow**.
-5. Confirm the first run succeeds. It seeds `seen-jobs.json` without sending.
+5. Confirm the first run succeeds. It seeds `data/seen-jobs.json` without sending.
 6. Future scheduled runs post new jobs to the channel.
 
 The bot must be a channel administrator with permission to post messages.

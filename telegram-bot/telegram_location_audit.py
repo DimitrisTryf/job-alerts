@@ -15,9 +15,10 @@ from job_alerts_lib.env import load_env
 from job_alerts_lib.location_audit import classify_post
 
 SCRIPT_DIRECTORY = Path(__file__).parent
-POST_LOG_PATH = SCRIPT_DIRECTORY / "posted-jobs.jsonl"
-GENERATED_RULES_PATH = SCRIPT_DIRECTORY / "telegram-generated-excluded-location-keywords.txt"
-REVIEW_DIRECTORY = SCRIPT_DIRECTORY / "telegram-location-reviews"
+DATA_DIRECTORY = SCRIPT_DIRECTORY / "data"
+POST_LOG_PATH = DATA_DIRECTORY / "posted-jobs.jsonl"
+GENERATED_RULES_PATH = SCRIPT_DIRECTORY / "config" / "generated-excluded-location-keywords.txt"
+REVIEW_DIRECTORY = DATA_DIRECTORY / "reviews"
 
 
 def load_posts(path: Path) -> list[dict[str, Any]]:
@@ -161,7 +162,7 @@ def main() -> None:
         f"Generated {len(candidates)} exclusion candidates; {len(review_rows)} need review."
     )
     if args.consume:
-        print("Consumed all audited records from posted-jobs.jsonl.")
+        print("Consumed all audited records from data/posted-jobs.jsonl.")
 
 
 if __name__ == "__main__":

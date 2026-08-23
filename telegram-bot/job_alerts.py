@@ -31,19 +31,21 @@ from job_alerts_lib.roles import (
 from job_alerts_lib.sources import configured_source_ids
 
 SCRIPT_DIRECTORY = Path(__file__).parent
+CONFIG_DIRECTORY = SCRIPT_DIRECTORY / "config"
+DATA_DIRECTORY = SCRIPT_DIRECTORY / "data"
 load_env(SCRIPT_DIRECTORY / ".env")
 
 CHANNEL = os.environ.get("TELEGRAM_CHANNEL", "@dtjobalerts")
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 FOUND_TIMEZONE = ZoneInfo(os.environ.get("JOB_ALERTS_TIMEZONE", "Europe/Athens"))
-STATE_PATH = SCRIPT_DIRECTORY / "seen-jobs.json"
-POST_LOG_PATH = SCRIPT_DIRECTORY / "posted-jobs.jsonl"
-FILTERED_JOBS_LOG_PATH = SCRIPT_DIRECTORY / "filtered-jobs.jsonl"
-EXCLUDED_LOCATIONS_PATH = SCRIPT_DIRECTORY / "excluded-location-keywords.txt"
+STATE_PATH = DATA_DIRECTORY / "seen-jobs.json"
+POST_LOG_PATH = DATA_DIRECTORY / "posted-jobs.jsonl"
+FILTERED_JOBS_LOG_PATH = DATA_DIRECTORY / "filtered-jobs.jsonl"
+EXCLUDED_LOCATIONS_PATH = CONFIG_DIRECTORY / "excluded-location-keywords.txt"
 GENERATED_EXCLUDED_LOCATIONS_PATH = (
-    SCRIPT_DIRECTORY / "telegram-generated-excluded-location-keywords.txt"
+    CONFIG_DIRECTORY / "generated-excluded-location-keywords.txt"
 )
-EXCLUDED_JOB_TITLES_PATH = SCRIPT_DIRECTORY / "excluded-job-title-keywords.txt"
+EXCLUDED_JOB_TITLES_PATH = CONFIG_DIRECTORY / "excluded-job-title-keywords.txt"
 
 
 def load_state() -> dict[str, Any]:

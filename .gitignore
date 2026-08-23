@@ -5,4 +5,4 @@ __pycache__/
 !.env.example
 temp.txt
 temp*
-telegram-location-reviews/
+telegram-bot/data/reviews/
