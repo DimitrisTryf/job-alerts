@@ -18,11 +18,11 @@ from zoneinfo import ZoneInfo
 from job_alerts_lib.collector import collect_jobs
 from job_alerts_lib.env import load_env
 from job_alerts_lib.filter_audit import record_filtered_jobs
-from job_alerts_lib.location_audit import should_exclude_location
-from job_alerts_lib.locations import (
-    load_excluded_location_keywords,
-    matching_excluded_location_keywords,
+from job_alerts_lib.location_audit import (
+    matching_location_exclusion_terms,
+    should_exclude_location,
 )
+from job_alerts_lib.locations import load_excluded_location_keywords
 from job_alerts_lib.roles import (
     is_excluded_job_title,
     load_excluded_job_title_keywords,
@@ -205,7 +205,7 @@ def main() -> None:
     ]
     if excluded_jobs:
         matched_terms = {
-            job["id"]: matching_excluded_location_keywords(
+            job["id"]: matching_location_exclusion_terms(
                 job["location"], excluded_keywords
             )
             for job in excluded_jobs

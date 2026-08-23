@@ -11,6 +11,7 @@ from job_alerts_lib.locations import is_excluded_location
 from job_alerts_lib.location_audit import (
     classify_location,
     classify_post,
+    matching_location_exclusion_terms,
     should_exclude_location,
 )
 from telegram_location_audit import clear_post_log, load_posts, posts_for_date
@@ -39,6 +40,12 @@ class LocationClassificationTests(unittest.TestCase):
             classify_location("London, United Kingdom; New York, United States")[0],
             "EUROPE",
         )
+
+    def test_known_outside_location_does_not_require_persisted_keyword(self) -> None:
+        location = "Caesarea, Israel (+1 additional location)"
+        self.assertTrue(should_exclude_location(location, []))
+        self.assertEqual(matching_location_exclusion_terms(location, []), ["israel"])
+        self.assertTrue(should_exclude_location("Malaysia", []))
         self.assertFalse(
             should_exclude_location(
                 "London, United Kingdom; New York, United States",
