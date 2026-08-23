@@ -17,20 +17,39 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
+      - name: Check Athens operating hours
+        id: schedule
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          TZ: Europe/Athens
+        run: |
+          hour=$(date +%H)
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]] || ((10#$hour >= 9 && 10#$hour < 22)); then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            echo "Running at $(date '+%Y-%m-%d %H:%M %Z')."
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping at $(date '+%Y-%m-%d %H:%M %Z'); operating hours are 09:00-21:59."
+          fi
       - uses: actions/checkout@v4
+        if: steps.schedule.outputs.should_run == 'true'
       - uses: actions/setup-python@v5
+        if: steps.schedule.outputs.should_run == 'true'
         with:
           python-version: "3.12"
       - name: Run unit tests
+        if: steps.schedule.outputs.should_run == 'true'
         working-directory: telegram-bot
         run: python -m unittest discover -s tests
       - name: Collect and publish new jobs
+        if: steps.schedule.outputs.should_run == 'true'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL: "@dtjobalerts"
         run: python telegram-bot/job_alerts.py
       - name: Save job alert state
-        if: always()
+        if: always() && steps.schedule.outputs.should_run == 'true'
         run: |
           if test -z "$(git status --porcelain -- telegram-bot/data/seen-jobs.json telegram-bot/data/posted-jobs.jsonl telegram-bot/data/filtered-jobs.jsonl)"; then
             exit 0
