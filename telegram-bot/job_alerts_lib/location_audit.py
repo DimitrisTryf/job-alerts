@@ -25,7 +25,7 @@ EUROPE_TERMS = (
     "remote - eu", "remote — eu", "es", "gb", "ro", "amsterdam", "athens", "barcelona",
     "belgrade", "berlin", "bratislava", "brussels", "bucharest", "budapest",
     "copenhagen", "dublin", "helsinki", "lisbon", "limassol", "london",
-    "erlangen", "madrid", "munich", "oslo", "paris", "prague", "sofia", "stockholm",
+    "ankara", "düsseldorf", "erlangen", "madrid", "munich", "oslo", "paris", "prague", "sofia", "stockholm",
     "tallinn", "tbilisi", "batumi", "vienna", "vilnius", "warsaw", "zagreb",
     "zurich",
 )
@@ -43,8 +43,9 @@ OUTSIDE_EUROPE_TERMS = (
     "atlanta", "austin", "bangalore", "bengaluru", "boston", "chicago",
     "caracas", "denver", "lima", "los angeles", "mexico city", "minneapolis",
     "montréal", "new york",
-    "phoenix", "raleigh", "san francisco", "san jose", "san ramon", "seattle",
-    "sydney", "são paulo", "tashkent", "tempe", "tokyo", "toronto", "vancouver",
+    "chennai", "dubai", "indiana", "nyc", "phoenix", "pune", "raleigh",
+    "remote (ind)", "san francisco", "san jose", "san ramon", "seattle",
+    "sydney", "são paulo", "tamil nadu", "tamil, nadu", "tashkent", "tempe", "tokyo", "toronto", "vancouver",
 )
 
 

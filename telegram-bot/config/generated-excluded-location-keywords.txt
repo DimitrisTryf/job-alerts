@@ -9,20 +9,31 @@ brazil
 canada
 caracas
 china
+chennai
 colombia
+dubai
 india
+indiana
+israel
+latam
 lima
+malaysia
 mexico
 montréal
 noram
+nyc
 pe
 peru
+pune
 qatar
+remote (ind)
 remote - us
 san jose
 saudi arabia
 seattle
 taiwan
+tamil nadu
+tamil, nadu
 thailand
 united arab emirates
 us

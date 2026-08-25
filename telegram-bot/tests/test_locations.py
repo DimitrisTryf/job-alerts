@@ -110,6 +110,27 @@ class LocationClassificationTests(unittest.TestCase):
         self.assertEqual(classify_location("Remote-NORAM")[0], "OUTSIDE_EUROPE")
         self.assertEqual(classify_location("Erlangen, BY, DE, 91052")[0], "EUROPE")
 
+    def test_latest_reviewed_european_cities(self) -> None:
+        self.assertEqual(
+            classify_location("Düsseldorf, NW, DE, 40474 +4 más…")[0],
+            "EUROPE",
+        )
+        self.assertEqual(classify_location("Çankaya/Ankara, TR")[0], "EUROPE")
+
+    def test_latest_reviewed_outside_europe_locations(self) -> None:
+        outside_locations = (
+            "NYC or Remote",
+            "Pune, IN",
+            "Virtual Office, Tamil, Nadu (+3 additional locations)",
+            "Remote (IND)",
+            "Chennai, Flexible (+2 additional locations)",
+            "Virtual Office (Indiana)",
+            "Dubai",
+        )
+        for location in outside_locations:
+            with self.subTest(location=location):
+                self.assertEqual(classify_location(location)[0], "OUTSIDE_EUROPE")
+
     def test_selects_posts_by_local_calendar_date(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "posts.jsonl"
