@@ -13,28 +13,71 @@ from job_alerts_lib.http import get_json, get_text, post_json
 from job_alerts_lib.locations import is_remote_location
 
 
-def workday_location(locations_text: str, external_path: str) -> str:
-    """Replace an opaque Workday location count with its URL's primary location."""
-    match = re.fullmatch(r"\s*(\d+)\s+Locations?\s*", locations_text, re.IGNORECASE)
-    if not match or int(match.group(1)) < 2:
-        return locations_text
+def _workday_primary_location(external_path: str) -> str | None:
+    """Derive a readable primary location from a Workday job URL path."""
     path_parts = urllib.parse.unquote(external_path).strip("/").split("/")
     try:
         location_slug = path_parts[path_parts.index("job") + 1]
     except (ValueError, IndexError):
-        return locations_text
+        return None
     words = [word for word in location_slug.split("-") if word]
     if len(words) >= 4:
-        primary = ", ".join((" ".join(words[:-2]), words[-2], words[-1]))
-    elif len(words) == 3 and words[0].casefold() == "remote":
-        primary = ", ".join(words)
-    elif len(words) >= 2:
-        primary = ", ".join((" ".join(words[:-1]), words[-1]))
-    else:
+        return ", ".join((" ".join(words[:-2]), words[-2], words[-1]))
+    if len(words) == 3 and words[0].casefold() == "remote":
+        return ", ".join(words)
+    if len(words) >= 2:
+        return ", ".join((" ".join(words[:-1]), words[-1]))
+    return None
+
+
+def workday_location(
+    locations_text: str,
+    external_path: str,
+    detailed_locations: list[str] | None = None,
+) -> str:
+    """Replace an opaque Workday count with actual locations when available."""
+    match = re.fullmatch(r"\s*(\d+)\s+Locations?\s*", locations_text, re.IGNORECASE)
+    if not match or int(match.group(1)) < 2:
         return locations_text
-    additional_count = int(match.group(1)) - 1
-    noun = "location" if additional_count == 1 else "locations"
-    return f"{primary} (+{additional_count} additional {noun})"
+    primary = _workday_primary_location(external_path)
+    locations = [primary, *(detailed_locations or [])]
+    unique_locations = list(dict.fromkeys(
+        location.strip() for location in locations if location and location.strip()
+    ))
+    return "; ".join(unique_locations) if unique_locations else "Location not specified"
+
+
+def _workday_detailed_locations(detail: dict[str, Any]) -> list[str]:
+    posting = detail.get("jobPostingInfo") or {}
+    additional_locations = posting.get("additionalLocations") or []
+    if not isinstance(additional_locations, list):
+        additional_locations = [additional_locations]
+    raw_locations = [posting.get("location"), *additional_locations]
+    locations = []
+    for value in raw_locations:
+        if isinstance(value, dict):
+            value = value.get("name") or value.get("displayName")
+        if isinstance(value, str) and value.strip() and value.strip() not in locations:
+            locations.append(value.strip())
+    return locations
+
+
+def resolve_workday_locations(job: dict[str, str]) -> dict[str, str]:
+    """Resolve an unseen Workday job's actual locations from its detail API."""
+    detail_url = job.get("locationDetailsUrl")
+    if not detail_url:
+        return job
+    locations = _workday_detailed_locations(get_json(detail_url))
+    resolved = workday_location(
+        job.get("locationsText", ""),
+        job.get("externalPath", ""),
+        locations,
+    )
+    return {
+        key: value
+        for key, value in {**job, "location": resolved}.items()
+        if key not in {"externalPath", "locationDetailsUrl", "locationsText"}
+    }
 
 
 def fetch_workday(
@@ -68,14 +111,23 @@ def fetch_workday(
             if not external_path or not title:
                 continue
             location = job.get("locationsText") or "Location not specified"
-            jobs.append({
+            result = {
                 "id": f"{company_id}:{external_path}",
                 "companyName": company_name,
                 "title": title.strip(),
                 "location": workday_location(location, external_path),
                 "team": "Other",
                 "url": f"{host}/en-US/{encoded_site}{external_path}",
-            })
+            }
+            if re.fullmatch(r"\s*\d+\s+Locations?\s*", location, re.IGNORECASE):
+                result.update({
+                    "externalPath": external_path,
+                    "locationsText": location,
+                    "locationDetailsUrl": (
+                        f"{host}/wday/cxs/{encoded_tenant}/{encoded_site}{external_path}"
+                    ),
+                })
+            jobs.append(result)
         offset += len(postings)
         if not postings or offset >= total:
             break

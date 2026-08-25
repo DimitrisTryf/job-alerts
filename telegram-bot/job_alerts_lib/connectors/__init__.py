@@ -5,6 +5,7 @@ from .enterprise import (
     fetch_oracle_recruiting,
     fetch_successfactors,
     fetch_workday,
+    resolve_workday_locations,
     fetch_zoho_recruit,
 )
 from .standard import (
@@ -27,5 +28,6 @@ __all__ = [
     "fetch_teamtailor",
     "fetch_workable",
     "fetch_workday",
+    "resolve_workday_locations",
     "fetch_zoho_recruit",
 ]

@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch
 
 from job_alerts_lib.connectors.standard import fetch_greenhouse
-from job_alerts_lib.connectors.enterprise import workday_location
+from job_alerts_lib.connectors.enterprise import resolve_workday_locations, workday_location
 
 
 class GreenhouseLocationTests(unittest.TestCase):
@@ -40,7 +40,7 @@ class GreenhouseLocationTests(unittest.TestCase):
 
         jobs = fetch_greenhouse("example", "Example", "example")
 
-        self.assertEqual(jobs[0]["location"], "Multiple locations; London; New York")
+        self.assertEqual(jobs[0]["location"], "London; New York")
 
 
 class WorkdayLocationTests(unittest.TestCase):
@@ -50,16 +50,17 @@ class WorkdayLocationTests(unittest.TestCase):
                 "2 Locations",
                 "/job/San-Jose-California-US/Software-Engineer_123",
             ),
-            "San Jose, California, US (+1 additional location)",
+            "San Jose, California, US",
         )
 
-    def test_plural_additional_location_count(self) -> None:
+    def test_actual_additional_locations_are_retained(self) -> None:
         self.assertEqual(
             workday_location(
                 "4 Locations",
                 "/job/Remote-Quebec-Canada/Software-Engineer_123",
+                ["Remote, Quebec, Canada", "London, United Kingdom", "Paris, France"],
             ),
-            "Remote, Quebec, Canada (+3 additional locations)",
+            "Remote, Quebec, Canada; London, United Kingdom; Paris, France",
         )
 
     def test_explicit_location_is_unchanged(self) -> None:
@@ -67,6 +68,34 @@ class WorkdayLocationTests(unittest.TestCase):
             workday_location("London, United Kingdom", "/job/London-UK/role"),
             "London, United Kingdom",
         )
+
+    @patch("job_alerts_lib.connectors.enterprise.get_json")
+    def test_unseen_job_locations_are_resolved_from_detail_api(self, get_json) -> None:
+        get_json.return_value = {
+            "jobPostingInfo": {
+                "location": "London, United Kingdom",
+                "additionalLocations": ["Paris, France", "Berlin, Germany"],
+            }
+        }
+        job = {
+            "id": "example:/job/London-UK/role",
+            "companyName": "Example",
+            "title": "Engineer",
+            "location": "London, UK",
+            "locationsText": "3 Locations",
+            "externalPath": "/job/London-UK/role",
+            "locationDetailsUrl": "https://example.test/detail",
+            "team": "Other",
+            "url": "https://example.test/job",
+        }
+
+        resolved = resolve_workday_locations(job)
+
+        self.assertEqual(
+            resolved["location"],
+            "London, UK; London, United Kingdom; Paris, France; Berlin, Germany",
+        )
+        self.assertNotIn("locationDetailsUrl", resolved)
 
 
 if __name__ == "__main__":

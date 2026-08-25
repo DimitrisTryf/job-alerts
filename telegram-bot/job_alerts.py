@@ -16,6 +16,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from job_alerts_lib.collector import collect_jobs
+from job_alerts_lib.connectors import resolve_workday_locations
 from job_alerts_lib.env import load_env
 from job_alerts_lib.filter_audit import record_filtered_jobs
 from job_alerts_lib.location_audit import (
@@ -72,16 +73,27 @@ def save_state(
     STATE_PATH.write_text(json.dumps(state, indent=2) + "\n")
 
 
-def send_job(job: dict[str, str]) -> int:
-    if not TOKEN:
-        raise RuntimeError("TELEGRAM_BOT_TOKEN is not configured")
-    text = "\n".join([
+def format_job_message(job: dict[str, str]) -> str:
+    locations = [part.strip() for part in job["location"].split(";") if part.strip()]
+    if len(locations) > 1:
+        location_text = "📍 <b>Locations:</b>\n" + "\n".join(
+            f"• {html.escape(location)}" for location in locations
+        )
+    else:
+        location_text = f"📍 {html.escape(locations[0] if locations else 'Location not specified')}"
+    return "\n".join([
         f"💼 <b>{html.escape(job['companyName'])}</b>",
         f"<b>{html.escape(job['title'])}</b>",
-        f"📍 {html.escape(job['location'])}",
+        location_text,
         f"📅 Found: {html.escape(job['foundAt'])}",
         f"🔗 <a href=\"{html.escape(job['url'], quote=True)}\">View opening</a>",
     ])
+
+
+def send_job(job: dict[str, str]) -> int:
+    if not TOKEN:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN is not configured")
+    text = format_job_message(job)
     body = json.dumps({
         "chat_id": CHANNEL,
         "text": text,
@@ -191,6 +203,20 @@ def main() -> None:
             f"Marked {len(excluded_role_jobs)} excluded-role openings as seen; none were sent.",
             flush=True,
         )
+    resolved_jobs = []
+    unresolved_location_jobs = []
+    for job in candidate_jobs:
+        try:
+            resolved_jobs.append(resolve_workday_locations(job))
+        except (OSError, ValueError, KeyError) as error:
+            unresolved_location_jobs.append(job)
+            print(
+                f"Deferred {job['companyName']} — {job['title']}: "
+                f"could not resolve all locations ({error})",
+                file=sys.stderr,
+                flush=True,
+            )
+    candidate_jobs = resolved_jobs
     excluded_keywords = load_excluded_location_keywords(
         EXCLUDED_LOCATIONS_PATH,
         GENERATED_EXCLUDED_LOCATIONS_PATH,
@@ -232,7 +258,8 @@ def main() -> None:
         time.sleep(1.1)
     print(
         f"Checked {len(jobs)} jobs; posted {len(new_jobs)} new openings; "
-        f"filtered {len(excluded_role_jobs)} by role and {len(excluded_jobs)} by location."
+        f"filtered {len(excluded_role_jobs)} by role and {len(excluded_jobs)} by location; "
+        f"deferred {len(unresolved_location_jobs)} with unresolved locations."
     )
 
 

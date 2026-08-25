@@ -22,7 +22,9 @@ def fetch_greenhouse(company_id: str, company_name: str, board: str) -> list[dic
             str(office.get("name") or "").strip()
             for office in job.get("offices") or []
         ]
-        if location.strip().casefold() in {"location", "n/a", "not specified"}:
+        if location.strip().casefold() in {
+            "location", "multiple locations", "n/a", "not specified"
+        }:
             location = "; ".join(dict.fromkeys(name for name in office_names if name))
         elif len(office_names) > 1:
             locations = [location, *office_names]
