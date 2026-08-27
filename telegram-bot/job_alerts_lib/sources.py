@@ -63,7 +63,6 @@ EIGHTFOLD_SOURCES = [
 SUCCESSFACTORS_SOURCES = [
     ("avaya", "Avaya", "https://careers.avaya.com"),
     ("atos", "Atos", "https://jobs.atos.net"),
-    ("telefonica", "Telefónica Global", "https://jobs.telefonica.com"),
 ]
 
 ORACLE_RECRUITING_SOURCES = [
