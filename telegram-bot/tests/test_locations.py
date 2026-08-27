@@ -131,6 +131,42 @@ class LocationClassificationTests(unittest.TestCase):
             with self.subTest(location=location):
                 self.assertEqual(classify_location(location)[0], "OUTSIDE_EUROPE")
 
+    def test_current_reviewed_european_locations(self) -> None:
+        europe_locations = (
+            "Porto",
+            "Amstelveen, NL",
+            "Warszawa, PL",
+            "Bezons, FR",
+            "Eindhoven, NL",
+            "Craiova",
+            "Groningen, NL",
+            "DE",
+            "Zaventem, BE",
+        )
+        for location in europe_locations:
+            with self.subTest(location=location):
+                self.assertEqual(classify_location(location)[0], "EUROPE")
+
+    def test_current_reviewed_outside_europe_locations(self) -> None:
+        outside_locations = (
+            "Singapur, SG",
+            "Santiago (Flexible)",
+            "Virtual Office (Telangana)",
+            "Gujarat, IN",
+            "Gurugram, IN",
+            "Navi Mumbai, IN",
+            "Menlo Park (Flexible)",
+            "Belmont, California",
+            "Costa Rica, San José, San José",
+            "Sao Paulo (Flexible)",
+            "Korea, Seoul, Seoul",
+            "Hong Kong",
+            "Remote-South America",
+        )
+        for location in outside_locations:
+            with self.subTest(location=location):
+                self.assertEqual(classify_location(location)[0], "OUTSIDE_EUROPE")
+
     def test_selects_posts_by_local_calendar_date(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "posts.jsonl"

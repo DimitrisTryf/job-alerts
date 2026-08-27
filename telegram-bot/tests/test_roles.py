@@ -20,6 +20,25 @@ class RoleFilterTests(unittest.TestCase):
         self.assertFalse(is_excluded_job_title("Threat Researcher", rules))
         self.assertFalse(is_excluded_job_title("Finance Systems Engineer", rules))
 
+    def test_reviewed_hr_payroll_and_tax_titles_are_excluded(self) -> None:
+        rules = [
+            "area de people",
+            "employee relations",
+            "payroll",
+            "r&d incentives",
+            "tax",
+        ]
+        excluded_titles = (
+            "Tech_2 Becas Area de People",
+            "Senior Specialist, Employee Relations - EMEA",
+            "Payroll Specialist Lead - France",
+            "European R&D Incentives Lead",
+            "Senior Tax Manager",
+        )
+        for title in excluded_titles:
+            with self.subTest(title=title):
+                self.assertTrue(is_excluded_job_title(title, rules))
+
     def test_loads_unique_rules_and_ignores_comments(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "rules.txt"

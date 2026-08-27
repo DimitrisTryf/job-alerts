@@ -5,6 +5,8 @@ accountant
 accounting
 accounts payable
 accounts receivable
+area de people
+employee relations
 hr
 human resources
 people & culture
@@ -13,7 +15,10 @@ people business partner
 people country consultant
 people operations
 people partner
+payroll
 px business partner
 recruiter
 recruiting
+r&d incentives
 talent acquisition
+tax

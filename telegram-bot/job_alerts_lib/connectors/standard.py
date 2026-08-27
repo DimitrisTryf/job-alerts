@@ -26,7 +26,7 @@ def fetch_greenhouse(company_id: str, company_name: str, board: str) -> list[dic
             "location", "multiple locations", "n/a", "not specified"
         }:
             location = "; ".join(dict.fromkeys(name for name in office_names if name))
-        elif len(office_names) > 1:
+        elif office_names:
             locations = [location, *office_names]
             location = "; ".join(dict.fromkeys(name for name in locations if name))
         jobs.append({

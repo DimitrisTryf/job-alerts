@@ -42,6 +42,23 @@ class GreenhouseLocationTests(unittest.TestCase):
 
         self.assertEqual(jobs[0]["location"], "London; New York")
 
+    @patch("job_alerts_lib.connectors.standard.get_json")
+    def test_remote_location_retains_single_office(self, get_json) -> None:
+        get_json.return_value = {
+            "jobs": [{
+                "id": 789,
+                "title": "AEM Developer",
+                "location": {"name": "Remote"},
+                "offices": [{"name": "Bangalore, India (Hybrid)"}],
+                "departments": [],
+                "absolute_url": "https://example.test/jobs/789",
+            }]
+        }
+
+        jobs = fetch_greenhouse("example", "Example", "example")
+
+        self.assertEqual(jobs[0]["location"], "Remote; Bangalore, India (Hybrid)")
+
 
 class WorkdayLocationTests(unittest.TestCase):
     def test_location_count_uses_primary_location_from_path(self) -> None:

@@ -8,18 +8,26 @@ br
 brazil
 canada
 caracas
-china
+california
 chennai
+china
 colombia
+costa rica
 dubai
+gujarat
+gurugram
+hong kong
 india
 indiana
 israel
+korea
 latam
 lima
 malaysia
+menlo park
 mexico
 montréal
+navi mumbai
 noram
 nyc
 pe
@@ -28,12 +36,17 @@ pune
 qatar
 remote (ind)
 remote - us
+santiago (flexible)
 san jose
 saudi arabia
 seattle
+singapur
+south america
+sao paulo
 taiwan
 tamil nadu
 tamil, nadu
+telangana
 thailand
 united arab emirates
 us

@@ -25,9 +25,11 @@ EUROPE_TERMS = (
     "remote - eu", "remote — eu", "es", "gb", "ro", "amsterdam", "athens", "barcelona",
     "belgrade", "berlin", "bratislava", "brussels", "bucharest", "budapest",
     "copenhagen", "dublin", "helsinki", "lisbon", "limassol", "london",
-    "ankara", "düsseldorf", "erlangen", "madrid", "munich", "oslo", "paris", "prague", "sofia", "stockholm",
+    "amstelveen", "ankara", "bezons", "craiova", "düsseldorf", "eindhoven",
+    "erlangen", "groningen", "madrid", "munich", "oslo", "paris", "porto",
+    "prague", "sofia", "stockholm", "warszawa",
     "tallinn", "tbilisi", "batumi", "vienna", "vilnius", "warsaw", "zagreb",
-    "zurich",
+    "zaventem", "zurich",
 )
 
 # Ambiguous names such as Georgia are intentionally absent.
@@ -36,16 +38,19 @@ OUTSIDE_EUROPE_TERMS = (
     "canada", "mexico", "brazil", "br", "argentina", "colombia", "chile",
     "peru", "pe", "venezuela", "ve",
     "india", "pakistan", "bangladesh", "philippines", "singapore", "malaysia",
-    "indonesia", "china", "japan", "south korea", "taiwan", "thailand",
+    "indonesia", "china", "japan", "korea", "south korea", "taiwan", "thailand",
     "vietnam", "australia", "new zealand", "south africa", "egypt", "morocco",
     "nigeria", "kenya", "qatar", "saudi arabia", "sau", "united arab emirates", "uae", "israel",
-    "latin america", "latam", "amer remote", "noram", "north america", "apac", "asia-pacific",
+    "latin america", "latam", "south america", "amer remote", "noram", "north america", "apac", "asia-pacific",
     "atlanta", "austin", "bangalore", "bengaluru", "boston", "chicago",
     "caracas", "denver", "lima", "los angeles", "mexico city", "minneapolis",
     "montréal", "new york",
-    "chennai", "dubai", "indiana", "nyc", "phoenix", "pune", "raleigh",
+    "california", "chennai", "costa rica", "dubai", "gujarat", "gurugram",
+    "hong kong", "indiana", "menlo park", "navi mumbai", "nyc", "phoenix",
+    "pune", "raleigh", "santiago (flexible)", "singapur",
     "remote (ind)", "san francisco", "san jose", "san ramon", "seattle",
-    "sydney", "são paulo", "tamil nadu", "tamil, nadu", "tashkent", "tempe", "tokyo", "toronto", "vancouver",
+    "sao paulo", "sydney", "são paulo", "tamil nadu", "tamil, nadu",
+    "tashkent", "telangana", "tempe", "tokyo", "toronto", "vancouver",
 )
 
 
@@ -57,6 +62,8 @@ def classify_location(location: str) -> tuple[str, list[str]]:
     """Return a classification plus safe exclusion terms found in a location."""
     if is_global_remote_location(location):
         return "GLOBAL_REMOTE", []
+    if location.strip().casefold() == "de":
+        return "EUROPE", []
     if any(_contains_term(location, term) for term in EUROPE_TERMS):
         return "EUROPE", []
     outside_matches = [
