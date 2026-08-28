@@ -147,6 +147,17 @@ class LocationClassificationTests(unittest.TestCase):
             with self.subTest(location=location):
                 self.assertEqual(classify_location(location)[0], "EUROPE")
 
+    def test_latest_reviewed_european_locations(self) -> None:
+        self.assertEqual(classify_location("Gdansk, PL")[0], "EUROPE")
+        self.assertEqual(classify_location("Remote — England")[0], "EUROPE")
+
+    def test_newest_reviewed_outside_europe_locations(self) -> None:
+        self.assertEqual(
+            classify_location("Bangkapi, Huaykwang, Bangkok, TH")[0],
+            "OUTSIDE_EUROPE",
+        )
+        self.assertEqual(classify_location("Manila (Flexible)")[0], "OUTSIDE_EUROPE")
+
     def test_current_reviewed_outside_europe_locations(self) -> None:
         outside_locations = (
             "Singapur, SG",

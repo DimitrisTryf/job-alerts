@@ -4,11 +4,12 @@
 amer remote
 australia
 bangalore
+bangkok
 br
 brazil
+california
 canada
 caracas
-california
 chennai
 china
 colombia
@@ -24,6 +25,7 @@ korea
 latam
 lima
 malaysia
+manila
 menlo park
 mexico
 montréal
@@ -36,13 +38,13 @@ pune
 qatar
 remote (ind)
 remote - us
-santiago (flexible)
 san jose
+santiago (flexible)
+sao paulo
 saudi arabia
 seattle
 singapur
 south america
-sao paulo
 taiwan
 tamil nadu
 tamil, nadu

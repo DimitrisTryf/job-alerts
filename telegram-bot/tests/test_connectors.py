@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from unittest.mock import patch
 
-from job_alerts_lib.connectors.standard import fetch_greenhouse
+from job_alerts_lib.connectors.standard import fetch_ashby, fetch_greenhouse
 from job_alerts_lib.connectors.enterprise import resolve_workday_locations, workday_location
 
 
@@ -58,6 +58,32 @@ class GreenhouseLocationTests(unittest.TestCase):
         jobs = fetch_greenhouse("example", "Example", "example")
 
         self.assertEqual(jobs[0]["location"], "Remote; Bangalore, India (Hybrid)")
+
+
+class AshbyLocationTests(unittest.TestCase):
+    @patch("job_alerts_lib.connectors.standard.get_json")
+    def test_secondary_locations_are_retained(self, get_json) -> None:
+        get_json.return_value = {
+            "jobs": [{
+                "id": "job-123",
+                "title": "Engineering Manager",
+                "location": "England",
+                "secondaryLocations": [
+                    {"location": "Canada"},
+                    {"location": "United States"},
+                ],
+                "isRemote": True,
+                "team": "Engineering",
+                "jobUrl": "https://example.test/job-123",
+            }]
+        }
+
+        jobs = fetch_ashby("example", "Example", "example")
+
+        self.assertEqual(
+            jobs[0]["location"],
+            "Remote — England; Canada; United States",
+        )
 
 
 class WorkdayLocationTests(unittest.TestCase):

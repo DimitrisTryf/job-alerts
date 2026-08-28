@@ -86,7 +86,13 @@ def fetch_ashby(company_id: str, company_name: str, board: str) -> list[dict[str
     )
     jobs = []
     for job in root["jobs"]:
-        location = job.get("location") or "Location not specified"
+        primary_location = job.get("location") or ""
+        locations = [primary_location] if primary_location else []
+        for secondary in job.get("secondaryLocations") or []:
+            secondary_location = secondary.get("location")
+            if secondary_location and secondary_location not in locations:
+                locations.append(secondary_location)
+        location = "; ".join(locations) or "Location not specified"
         if job.get("isRemote") and not is_remote_location(location):
             location = f"Remote — {location}"
         jobs.append({
