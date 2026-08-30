@@ -158,6 +158,25 @@ class LocationClassificationTests(unittest.TestCase):
         )
         self.assertEqual(classify_location("Manila (Flexible)")[0], "OUTSIDE_EUROPE")
 
+    def test_us_ats_slug_does_not_confuse_dublin_with_ireland(self) -> None:
+        self.assertEqual(
+            classify_location("Remote — US-CA-Dublin")[0],
+            "OUTSIDE_EUROPE",
+        )
+        self.assertEqual(
+            classify_location("US-CA-Menlo Park; US-VA-McLean; US-CA-Dublin")[0],
+            "OUTSIDE_EUROPE",
+        )
+        self.assertEqual(
+            classify_location("London, United Kingdom; US-CA-Dublin")[0],
+            "EUROPE",
+        )
+
+    def test_newest_reviewed_european_cities(self) -> None:
+        for location in ("Pessac, FR", "Bydgoszcz, PL", "Kadıköy /Istanbul, TR"):
+            with self.subTest(location=location):
+                self.assertEqual(classify_location(location)[0], "EUROPE")
+
     def test_current_reviewed_outside_europe_locations(self) -> None:
         outside_locations = (
             "Singapur, SG",

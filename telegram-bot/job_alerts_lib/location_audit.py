@@ -26,8 +26,9 @@ EUROPE_TERMS = (
     "belgrade", "berlin", "bratislava", "brussels", "bucharest", "budapest",
     "copenhagen", "dublin", "helsinki", "lisbon", "limassol", "london",
     "amstelveen", "ankara", "bezons", "craiova", "düsseldorf", "eindhoven",
-    "erlangen", "gdansk", "gdańsk", "groningen", "madrid", "munich", "oslo", "paris", "porto",
-    "prague", "sofia", "stockholm", "warszawa",
+    "bydgoszcz", "erlangen", "gdansk", "gdańsk", "groningen", "istanbul",
+    "madrid", "munich", "oslo", "paris", "pessac", "porto", "prague",
+    "sofia", "stockholm", "warszawa",
     "tallinn", "tbilisi", "batumi", "vienna", "vilnius", "warsaw", "zagreb",
     "zaventem", "zurich",
 )
@@ -58,10 +59,18 @@ def _contains_term(text: str, term: str) -> bool:
     return bool(re.search(rf"(?<!\w){re.escape(term)}(?!\w)", text.casefold()))
 
 
+def _is_us_ats_location(segment: str) -> bool:
+    """Recognize ATS slugs such as US-CA-Dublin without treating Dublin as Ireland."""
+    return bool(re.search(r"(?:^|[\s—–-])us-[a-z]{2}(?:-|$)", segment.casefold()))
+
+
 def classify_location(location: str) -> tuple[str, list[str]]:
     """Return a classification plus safe exclusion terms found in a location."""
     if is_global_remote_location(location):
         return "GLOBAL_REMOTE", []
+    segments = [segment.strip() for segment in location.split(";") if segment.strip()]
+    if segments and all(_is_us_ats_location(segment) for segment in segments):
+        return "OUTSIDE_EUROPE", ["us"]
     if location.strip().casefold() == "de":
         return "EUROPE", []
     if any(_contains_term(location, term) for term in EUROPE_TERMS):

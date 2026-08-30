@@ -7,7 +7,14 @@ accounts payable
 accounts receivable
 area de people
 employee relations
-hr
+hr business partner
+hr coordinator
+hr director
+hr generalist
+hr manager
+hr operations
+hr services manager
+hr specialist
 human resources
 people & culture
 people and culture

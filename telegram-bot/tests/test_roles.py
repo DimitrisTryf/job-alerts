@@ -9,16 +9,36 @@ from job_alerts_lib.roles import is_excluded_job_title, load_excluded_job_title_
 
 class RoleFilterTests(unittest.TestCase):
     def test_matches_whole_words_and_phrases(self) -> None:
-        rules = ["hr", "recruiter", "accounting", "people operations"]
+        rules = ["hr manager", "recruiter", "accounting", "people operations"]
         self.assertTrue(is_excluded_job_title("Senior HR Manager", rules))
         self.assertTrue(is_excluded_job_title("Technical Recruiter", rules))
         self.assertTrue(is_excluded_job_title("Director, People Operations", rules))
         self.assertTrue(is_excluded_job_title("Accounting Manager", rules))
 
     def test_does_not_match_substrings_or_unrelated_finance_roles(self) -> None:
-        rules = ["hr", "accounting"]
+        rules = ["hr manager", "accounting"]
         self.assertFalse(is_excluded_job_title("Threat Researcher", rules))
         self.assertFalse(is_excluded_job_title("Finance Systems Engineer", rules))
+
+    def test_hr_customer_domain_is_not_an_hr_role(self) -> None:
+        rules = [
+            "hr business partner",
+            "hr coordinator",
+            "hr director",
+            "hr generalist",
+            "hr manager",
+            "hr operations",
+            "hr services manager",
+            "hr specialist",
+        ]
+        self.assertFalse(
+            is_excluded_job_title(
+                "Cloud & AI Solution Sales Specialist for HR Services",
+                rules,
+            )
+        )
+        self.assertTrue(is_excluded_job_title("HR Services Manager", rules))
+        self.assertTrue(is_excluded_job_title("Senior HR Specialist", rules))
 
     def test_reviewed_hr_payroll_and_tax_titles_are_excluded(self) -> None:
         rules = [
