@@ -29,3 +29,81 @@ recruiting
 r&d incentives
 talent acquisition
 tax
+
+# Clearly unrelated roles; related/ambiguous titles are protected by roles.py.
+account executive
+account manager
+sales representative
+sales development representative
+business development representative
+sales director
+sales manager
+sales specialist
+sales engineer
+sales executive
+account director
+partner sales manager
+product sales specialist
+marketing manager
+marketing specialist
+marketing lead
+head of performance marketing
+channel marketing
+product designer
+software engineer
+software engineering
+software developer
+software development engineer
+software architect
+backend software engineer
+angular developer
+android developer
+java developer
+cobol developer
+application developer
+full stack engineer
+data scientist
+hardware engineer
+asic engineer
+nanofabrication engineer
+legal counsel
+corporate counsel
+sales legal intern
+logistics technician
+warehouse technician
+data center technician
+data center technicians
+critical environment technician
+critical environment field service engineer
+critical environment industrial controls systems engineer
+ce industrial controls systems engineer
+education counsellor
+education counselor
+search engine optimization specialist
+ai engineer
+mlops engineer
+data engineer
+data platform engineer
+devops engineer
+cloud engineer
+infrastructure engineer
+site reliability engineer
+security engineer
+network engineer
+network developer
+support engineer
+support agent
+support advisor
+helpdesk
+service desk apprentice
+database administrator
+physical security engineer
+government affairs intern
+postdoctoral researcher
+senior researcher
+head of sales
+enterprise sales leader
+presales engineer
+marketing & communications specialist
+lifecycle & email marketing
+développeur logiciel

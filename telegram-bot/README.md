@@ -40,8 +40,10 @@ exclusions. Only explicit worldwide/global remote wording is always accepted.
 
 Job titles matching a case-insensitive whole-word or phrase rule in
 `config/excluded-job-title-keywords.txt` are recorded as seen without being posted.
-The initial rules exclude HR, recruiting, talent-acquisition, people-operations,
-and accounting roles. The manual review may inspect an official job description
+Rules conservatively exclude clearly unrelated roles. Project/program management,
+coordination, professional services, delivery, implementation, QA/testing, FinOps
+and adjacent or ambiguous roles are retained; this is not a strict allowlist.
+Related title evidence overrides exclusions, including mixed-role titles. The manual review may inspect an official job description
 to classify an ambiguous title, but runtime filtering remains title-based so the
 hourly job does not need to scrape every job-detail page.
 
@@ -51,9 +53,9 @@ eligible. When Workday exposes only a count such as `2 Locations`, the collector
 shows the primary location encoded in the official job URL plus the undisclosed
 additional count, for example `San Jose, California, US (+1 additional location)`.
 
-Every job rejected by a role or location rule is appended once to
-`data/filtered-jobs.jsonl` with its filter reason, matched terms, company, title,
-location, and official URL. GitHub Actions checkpoints this file so false positives can be
+Every job rejected by a title rule is appended once to `data/title-filtered.jsonl`;
+location rejections go to `data/location-filtered.jsonl` with its filter reason, matched terms, company, title,
+location, and official URL. GitHub Actions checkpoints both files so false positives can be
 reviewed later without reposting them.
 
 ## Daily Telegram location and role audit
@@ -134,3 +136,10 @@ python telegram-bot/job_alerts.py --collect-only
 6. Future scheduled runs post new jobs to the channel.
 
 The bot must be a channel administrator with permission to post messages.
+
+Title review of previously posted records moves clearly unrelated jobs into
+`data/title-filtered.jsonl`, preserving their original message IDs and metadata
+with `previouslyPosted: true`. It does not delete Telegram messages or requeue jobs.
+Retain potentially relevant or uncertain records in `posted-jobs.jsonl` during a
+title-only review. Financial Manager and general finance titles stay pending
+unless there is conclusive evidence they are unrelated to FinOps.

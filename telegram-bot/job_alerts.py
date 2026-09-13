@@ -41,7 +41,8 @@ TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 FOUND_TIMEZONE = ZoneInfo(os.environ.get("JOB_ALERTS_TIMEZONE", "Europe/Athens"))
 STATE_PATH = DATA_DIRECTORY / "seen-jobs.json"
 POST_LOG_PATH = DATA_DIRECTORY / "posted-jobs.jsonl"
-FILTERED_JOBS_LOG_PATH = DATA_DIRECTORY / "filtered-jobs.jsonl"
+TITLE_FILTERED_JOBS_LOG_PATH = DATA_DIRECTORY / "title-filtered.jsonl"
+LOCATION_FILTERED_JOBS_LOG_PATH = DATA_DIRECTORY / "location-filtered.jsonl"
 EXCLUDED_LOCATIONS_PATH = CONFIG_DIRECTORY / "excluded-location-keywords.txt"
 GENERATED_EXCLUDED_LOCATIONS_PATH = (
     CONFIG_DIRECTORY / "generated-excluded-location-keywords.txt"
@@ -195,7 +196,7 @@ def main() -> None:
             for job in excluded_role_jobs
         }
         record_filtered_jobs(
-            FILTERED_JOBS_LOG_PATH, excluded_role_jobs, "role", matched_terms
+            TITLE_FILTERED_JOBS_LOG_PATH, excluded_role_jobs, "role", matched_terms
         )
         seen.update(job["id"] for job in excluded_role_jobs)
         save_state(seen, initialized_sources)
@@ -237,7 +238,7 @@ def main() -> None:
             for job in excluded_jobs
         }
         record_filtered_jobs(
-            FILTERED_JOBS_LOG_PATH, excluded_jobs, "location", matched_terms
+            LOCATION_FILTERED_JOBS_LOG_PATH, excluded_jobs, "location", matched_terms
         )
         seen.update(job["id"] for job in excluded_jobs)
         save_state(seen, initialized_sources)
