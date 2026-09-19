@@ -96,8 +96,16 @@ def write_outputs(
     review_path.write_text("\n".join(rows) + "\n")
 
 
-def clear_post_log(path: Path) -> None:
-    path.write_text("# Successful Telegram channel posts, one JSON object per line.\n")
+def consume_posts(path: Path, reviewed: list[dict[str, Any]]) -> int:
+    """Consume resolved snapshot records, preserving uncertainty and new arrivals."""
+    reviewed_ids = {post["messageId"] for post in reviewed if "messageId" in post}
+    current = load_posts(path)
+    retained = [post for post in current if post.get("messageId") not in reviewed_ids]
+    path.write_text(
+        "# Successful Telegram channel posts, one JSON object per line.\n"
+        + "".join(json.dumps(post, ensure_ascii=False) + "\n" for post in retained)
+    )
+    return len(current) - len(retained)
 
 
 def parse_args() -> argparse.Namespace:
@@ -107,7 +115,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--consume",
         action="store_true",
-        help="Clear the post log after a successful --all audit",
+        help="Consume resolved posts after a successful --all audit; retain unknown locations",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print without writing files")
     args = parser.parse_args()
@@ -142,6 +150,7 @@ def main() -> None:
     counts: dict[str, int] = {}
     candidates = set()
     review_rows = []
+    resolved_posts = []
     for post in posts:
         location = str(post.get("location") or "Location not specified")
         title = str(post.get("title") or "")
@@ -151,18 +160,20 @@ def main() -> None:
         candidates.update(terms)
         if classification.startswith("UNKNOWN"):
             review_rows.append((classification, location, title))
+        else:
+            resolved_posts.append(post)
         print(f"{classification:16} {location} | {title}")
 
     write_outputs(audit_label, candidates, review_rows, args.dry_run)
     if args.consume:
-        clear_post_log(POST_LOG_PATH)
+        consumed_count = consume_posts(POST_LOG_PATH, resolved_posts)
     summary = ", ".join(f"{key}={value}" for key, value in sorted(counts.items())) or "none"
     print(
         f"Checked {len(posts)} Telegram posts for {audit_description}: {summary}. "
         f"Generated {len(candidates)} exclusion candidates; {len(review_rows)} need review."
     )
     if args.consume:
-        print("Consumed all audited records from data/posted-jobs.jsonl.")
+        print(f"Consumed {consumed_count} resolved records; unknown locations remain pending.")
 
 
 if __name__ == "__main__":

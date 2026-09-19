@@ -13,22 +13,30 @@ caracas
 chennai
 china
 colombia
+colorado
 costa rica
 dubai
 gujarat
 gurugram
 hong kong
+houston
+illinois
 india
 indiana
 israel
+jordan
 korea
+kowloon
+kuwait
 latam
 lima
 malaysia
 manila
 menlo park
 mexico
+monterrey
 montréal
+mumbai
 navi mumbai
 noram
 nyc
@@ -38,6 +46,7 @@ pune
 qatar
 remote (ind)
 remote - us
+remote-amer
 san jose
 santiago (flexible)
 sao paulo
@@ -49,7 +58,9 @@ taiwan
 tamil nadu
 tamil, nadu
 telangana
+texas
 thailand
 united arab emirates
+uruguay
 us
 ve

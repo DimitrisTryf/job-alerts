@@ -14,7 +14,7 @@ from job_alerts_lib.location_audit import (
     matching_location_exclusion_terms,
     should_exclude_location,
 )
-from telegram_location_audit import clear_post_log, load_posts, posts_for_date
+from telegram_location_audit import consume_posts, load_posts, posts_for_date
 
 
 class LocationClassificationTests(unittest.TestCase):
@@ -215,11 +215,11 @@ class LocationClassificationTests(unittest.TestCase):
             )
             self.assertEqual(len(posts), 1)
 
-    def test_clear_post_log_leaves_valid_empty_queue(self) -> None:
+    def test_consume_posts_leaves_valid_empty_queue(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "posts.jsonl"
             path.write_text('{"messageId": 1}\n')
-            clear_post_log(path)
+            consume_posts(path, [{"messageId": 1}])
             self.assertEqual(load_posts(path), [])
 
 

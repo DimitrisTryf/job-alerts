@@ -24,7 +24,7 @@ def is_excluded_job_title(title: str, keywords: list[str]) -> bool:
 
 
 def matching_excluded_job_title_keywords(title: str, keywords: list[str]) -> list[str]:
-    normalized = " ".join(title.casefold().split())
+    normalized = " ".join(title.casefold().replace("_", " ").split())
     if has_potentially_relevant_role(normalized):
         return []
     return [
@@ -36,13 +36,18 @@ def matching_excluded_job_title_keywords(title: str, keywords: list[str]) -> lis
 # Err on the side of retaining adjacent roles, including mixed-role titles.
 # This is a protection against exclusions, never a restrictive allowlist.
 RELATED_ROLE_PATTERN = re.compile(
-    r"(?<!\w)(?:project|program|programme|pmo|portfolio|coordinator|coordination|"
+    r"(?<!\w)(?:projects?|programs?|programmes?|pmo|portfolio|coordinator|coordination|"
     r"professional[\s-]+services|delivery|implementation|onboarding|"
     r"service[\s-]+management|customer[\s-]+success|"
-    r"quality|qa|sqa|sdet|test|testing|tester|finops|fin[\s-]+ops|"
+    r"quality|qa|sqa|sdet|test|testing|tester|validation|benchmarking|evaluations?|finops|fin[\s-]+ops|"
     r"financial[\s-]+operations|finance[\s-]+operations|cloud[\s-]+cost|"
     r"cost[\s-]+optimization|cost[\s-]+optimisation|scrum|agile|"
-    r"product[\s-]+manager|product[\s-]+owner|business[\s-]+analyst)(?!\w)"
+    r"product[\s-]+manager|product[\s-]+owner|business[\s-]+analyst|"
+    r"technical[\s-]+account[\s-]+manager|services[\s-]+account[\s-]+manager|"
+    r"business[\s-]+architect|advanced[\s-]+services|people[\s-]+technology|"
+    r"transformation|vendor[\s-]+relationship|change[\s-]+management|"
+    r"(?:software[\s-]+)?engineering[\s-]+manager|"
+    r"manager[\s,]+(?:technical[\s-]+support|(?:platform[\s-]+|systems[\s-]+)?software)[\s-]+engineering)(?!\w)"
 )
 
 

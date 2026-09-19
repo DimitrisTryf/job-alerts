@@ -107,3 +107,13 @@ presales engineer
 marketing & communications specialist
 lifecycle & email marketing
 développeur logiciel
+
+# Confirmed unrelated titles from the September 2026 review.
+copywriter
+frontend engineer
+backend engineer
+sap abap developer
+legal intern
+seo specialist
+quantum measurement engineer
+optical packaging engineer

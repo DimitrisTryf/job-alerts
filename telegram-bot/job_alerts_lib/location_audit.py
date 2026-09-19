@@ -31,6 +31,9 @@ EUROPE_TERMS = (
     "sofia", "stockholm", "warszawa",
     "tallinn", "tbilisi", "batumi", "vienna", "vilnius", "warsaw", "zagreb",
     "zaventem", "zurich",
+    "kraków", "krakow", "wroclaw", "wrocław", "frankfurt",
+    "bad homburg", "les clayes-sous-bois", "toulouse", "beograd",
+    "saint petersburg, russian federation", "uk-remote", "remote from eu",
 )
 
 # Ambiguous names such as Georgia are intentionally absent.
@@ -52,6 +55,8 @@ OUTSIDE_EUROPE_TERMS = (
     "remote (ind)", "san francisco", "san jose", "san ramon", "seattle",
     "sao paulo", "sydney", "são paulo", "tamil nadu", "tamil, nadu",
     "tashkent", "telangana", "tempe", "tokyo", "toronto", "vancouver",
+    "jordan", "kuwait", "uruguay", "monterrey", "mumbai", "kowloon",
+    "texas", "illinois", "colorado", "houston", "remote-amer",
 )
 
 

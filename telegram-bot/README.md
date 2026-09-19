@@ -66,7 +66,7 @@ To make the audit reliable, the publisher records each successful post in
 location, and URL. GitHub Actions checkpoints this log together with
 `data/seen-jobs.json`.
 
-Process and consume every pending record manually:
+Audit all pending locations and consume resolved records manually (unknown locations remain pending):
 
 ```shell
 python telegram-bot/telegram_location_audit.py --all --consume
@@ -143,3 +143,9 @@ with `previouslyPosted: true`. It does not delete Telegram messages or requeue j
 Retain potentially relevant or uncertain records in `posted-jobs.jsonl` during a
 title-only review. Financial Manager and general finance titles stay pending
 unless there is conclusive evidence they are unrelated to FinOps.
+
+The manual title review also preserves technical/services account management,
+implementation and transformation work, and software validation/evaluation roles.
+A full skill audit retains ambiguous roles for follow-up; a matching department
+word alone never proves a role is unrelated. Review details are kept locally in
+`data/reviews/`, which is ignored by Git.
