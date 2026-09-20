@@ -63,6 +63,23 @@ class SeptemberReviewTests(unittest.TestCase):
         self.assertFalse(is_excluded_job_title('Software Engineer_QA', rules))
 
 
+    def test_september_20_sales_and_device_support_roles(self):
+        rules = load_excluded_job_title_keywords(Path(__file__).parents[1] / 'config/excluded-job-title-keywords.txt')
+        for title in ('Senior Digital Solution Area Specialist - German Speaking',
+                      'Digital Solution Area Specialists - Security',
+                      'Senior Data Center IT Support Technician',
+                      'ISV Partner Solution Sales',
+                      'Senior Solution Area Sales Specialists AI Workforce - Education'):
+            with self.subTest(title=title):
+                self.assertTrue(is_excluded_job_title(title, rules))
+                self.assertFalse(is_excluded_job_title(title + ' / Project Coordinator', rules))
+        for title in ('Senior Technology Consultant, Data and AI and Agentic AI',
+                      'Operational Risk & Resilience Manager',
+                      'IT Operational Resilience Manager', 'Solution Architect Manager - France'):
+            with self.subTest(title=title):
+                self.assertFalse(is_excluded_job_title(title, rules))
+
+
 class AuditConsumptionTests(unittest.TestCase):
     def test_only_resolved_snapshot_ids_are_consumed(self):
         import json
