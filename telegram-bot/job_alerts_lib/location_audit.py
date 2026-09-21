@@ -57,6 +57,7 @@ OUTSIDE_EUROPE_TERMS = (
     "tashkent", "telangana", "tempe", "tokyo", "toronto", "vancouver",
     "jordan", "kuwait", "uruguay", "monterrey", "mumbai", "kowloon",
     "texas", "illinois", "colorado", "houston", "remote-amer",
+    "cairo, eg", "dallas, tx",
 )
 
 

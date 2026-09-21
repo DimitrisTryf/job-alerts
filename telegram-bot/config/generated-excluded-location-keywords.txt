@@ -7,6 +7,7 @@ bangalore
 bangkok
 br
 brazil
+cairo, eg
 california
 canada
 caracas
@@ -15,6 +16,7 @@ china
 colombia
 colorado
 costa rica
+dallas, tx
 dubai
 gujarat
 gurugram

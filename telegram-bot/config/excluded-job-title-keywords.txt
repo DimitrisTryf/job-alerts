@@ -124,3 +124,13 @@ digital solution area specialists
 data center it support technician
 partner solution sales
 sales specialists
+
+# September 21: explicit sales titles and official sales/NOC responsibilities.
+key accounts sales
+global sales
+ai workforce digital specialist
+digital solution specialist security
+commercial executive
+senior client director
+noc engineer
+leader, sales
