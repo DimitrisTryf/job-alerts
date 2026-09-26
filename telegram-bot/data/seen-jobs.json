@@ -45,7 +45,7 @@
     "zendesk",
     "zoom"
   ],
-  "updatedAt": "2026-09-26T11:21:51.405806+00:00",
+  "updatedAt": "2026-09-26T16:23:31.354365+00:00",
   "seenIds": [
     "8x8:/job/Cebu-8x8-Asia/C--Software-Engineer_R2771",
     "8x8:/job/Cebu-8x8-Asia/Senior-Full-Stack-Engineer--Java-_R2269",
@@ -1814,6 +1814,7 @@
     "cisco:/job/Bayan-Lepas-Malaysia/Supply-Planning-Manager_2017033",
     "cisco:/job/Bayan-Lepas-Malaysia/Supply-Planning-Manager_2017395",
     "cisco:/job/Beijing-China/Account-Executive---Portfolio_2022085",
+    "cisco:/job/Beijing-China/Solutions-Engineer_2025685",
     "cisco:/job/Belfast-United-Kingdom/Solutions-Engineer---Enterprise-Networking-UKI_2010573",
     "cisco:/job/Belgrade-Serbia/C---Software-Engineer_2003521",
     "cisco:/job/Belgrade-Serbia/C---Software-Engineer_2014928",
@@ -2758,6 +2759,7 @@
     "cisco:/job/North-Sydney-Australia/Account-Executive---Portfolio_2014720-1",
     "cisco:/job/North-Sydney-Australia/Account-Executive---Portfolio_2022065",
     "cisco:/job/North-Sydney-Australia/Account-Executive---Splunk-Strategic-Accounts_2021760",
+    "cisco:/job/North-Sydney-Australia/Account-Executive---Splunk-Strategic-Public-Sector-Accounts--NSW-_2025384-1",
     "cisco:/job/North-Sydney-Australia/Account-Executive---Splunk_2015447-1",
     "cisco:/job/North-Sydney-Australia/Account-Executive---Splunk_2018531",
     "cisco:/job/North-Sydney-Australia/Account-Executive-NSW-Enterprise---Splunk_2015197-1",
@@ -14469,6 +14471,7 @@
     "oracle:346013",
     "oracle:346028",
     "oracle:346037",
+    "oracle:346064",
     "oracle:346085",
     "oracle:346087",
     "oracle:346090",
