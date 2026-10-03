@@ -45,7 +45,7 @@
     "zendesk",
     "zoom"
   ],
-  "updatedAt": "2026-10-03T12:36:23.502253+00:00",
+  "updatedAt": "2026-10-03T17:16:40.232244+00:00",
   "seenIds": [
     "8x8:/job/Cebu-8x8-Asia/C--Software-Engineer_R2771",
     "8x8:/job/Cebu-8x8-Asia/Senior-Full-Stack-Engineer--Java-_R2269",
@@ -3959,6 +3959,7 @@
     "cisco:/job/Singapore-Singapore/Leader--Client-Operations_2016733-1",
     "cisco:/job/Singapore-Singapore/Leader--Customer-Experience_2022534",
     "cisco:/job/Singapore-Singapore/Leader--Global-Commission-Operations_2017911-1",
+    "cisco:/job/Singapore-Singapore/Leader--Sales_2026409-1",
     "cisco:/job/Singapore-Singapore/Leader--Strategy---Planning--APJC-Engineering-_2012653",
     "cisco:/job/Singapore-Singapore/Manager--Early-in-Career-Sales-Talent--ASE-_2013570",
     "cisco:/job/Singapore-Singapore/Observability-Solutions-Architect_2003969",
@@ -10871,6 +10872,8 @@
     "microsoft:200058815",
     "microsoft:200058819",
     "microsoft:200058823",
+    "microsoft:200058833",
+    "microsoft:200058834",
     "microsoft:200058835",
     "microsoft:200058836",
     "microsoft:200058839",
