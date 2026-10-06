@@ -46,7 +46,12 @@ RELATED_ROLE_PATTERN = re.compile(
     r"technical[\s-]+account[\s-]+manager|services[\s-]+account[\s-]+manager|"
     r"business[\s-]+architect|advanced[\s-]+services|people[\s-]+technology|"
     r"transformation|vendor[\s-]+relationship|change[\s-]+management|"
-    r"(?:software[\s-]+)?engineering[\s-]+manager|"
+    r"(?:software[\s-]+)?engineering[\s-]+manager|software[\s-]+engineer[\s-]+manager|"
+    r"(?:data[\s-]+center|critical[\s-]+environment|logistics)[\s-]+technicians?[\s-]+manager|"
+    r"(?:director|leader)[\s,]+(?:platform[\s-]+)?software[\s-]+engineering|"
+    r"software[\s-]+engineering[\s-]+technical[\s-]+leader|"
+    r"people[\s-]+operations[\s-]+systems|revenue[\s-]+accounting[\s-]+systems|"
+    r"integration[\s-]+accounting|fde|forward[\s-]+deployed|performance[\s-]+tooling|cypress|"
     r"manager[\s,]+(?:technical[\s-]+support|(?:platform[\s-]+|systems[\s-]+)?software)[\s-]+engineering)(?!\w)"
 )
 

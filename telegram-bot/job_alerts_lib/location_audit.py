@@ -34,6 +34,8 @@ EUROPE_TERMS = (
     "kraków", "krakow", "wroclaw", "wrocław", "frankfurt",
     "bad homburg", "les clayes-sous-bois", "toulouse", "beograd",
     "saint petersburg, russian federation", "uk-remote", "remote from eu",
+    "cork (irl)", "vimercate (flexible)", "échirolles, fr", "praha, cz",
+    "wien, at", "aix en provence, fr", "six fours les plages, fr",
 )
 
 # Ambiguous names such as Georgia are intentionally absent.
@@ -58,6 +60,8 @@ OUTSIDE_EUROPE_TERMS = (
     "jordan", "kuwait", "uruguay", "monterrey", "mumbai", "kowloon",
     "texas", "illinois", "colorado", "houston", "remote-amer",
     "cairo, eg", "dallas, tx",
+    "hyderabad, in", "taguig city, ph", "johannesburg, mea, za",
+    "seoul (flexible)", "bogota (flexible)", "casablanca, ma",
 )
 
 

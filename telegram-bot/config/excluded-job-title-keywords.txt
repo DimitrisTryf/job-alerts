@@ -32,7 +32,6 @@ tax
 
 # Clearly unrelated roles; related/ambiguous titles are protected by roles.py.
 account executive
-account manager
 sales representative
 sales development representative
 business development representative
@@ -134,3 +133,13 @@ commercial executive
 senior client director
 noc engineer
 leader, sales
+
+# October 6: explicit sales, development, and manufacturing roles.
+manager, sales development
+head of enterprise sales
+golang developer
+salesforce developer
+machine learning engineer
+memory layout design engineer
+optical fibre manufacturing technician
+leader, services sales

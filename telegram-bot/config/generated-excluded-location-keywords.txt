@@ -5,12 +5,14 @@ amer remote
 australia
 bangalore
 bangkok
+bogota (flexible)
 br
 brazil
 cairo, eg
 california
 canada
 caracas
+casablanca, ma
 chennai
 china
 colombia
@@ -22,10 +24,12 @@ gujarat
 gurugram
 hong kong
 houston
+hyderabad, in
 illinois
 india
 indiana
 israel
+johannesburg, mea, za
 jordan
 korea
 kowloon
@@ -54,8 +58,10 @@ santiago (flexible)
 sao paulo
 saudi arabia
 seattle
+seoul (flexible)
 singapur
 south america
+taguig city, ph
 taiwan
 tamil nadu
 tamil, nadu
