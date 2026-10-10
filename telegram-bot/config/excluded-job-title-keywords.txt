@@ -126,7 +126,7 @@ sales specialists
 
 # September 21: explicit sales titles and official sales/NOC responsibilities.
 key accounts sales
-global sales
+global sales - customer acquisition
 ai workforce digital specialist
 digital solution specialist security
 commercial executive
@@ -143,3 +143,9 @@ machine learning engineer
 memory layout design engineer
 optical fibre manufacturing technician
 leader, services sales
+
+# October 10: precise development, device-support and sales titles.
+.net developer
+dc it support technician
+inside sales - representative
+responsable commercial
