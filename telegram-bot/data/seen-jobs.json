@@ -45,7 +45,7 @@
     "zendesk",
     "zoom"
   ],
-  "updatedAt": "2026-10-11T07:13:08.021741+00:00",
+  "updatedAt": "2026-10-11T14:03:50.520388+00:00",
   "seenIds": [
     "8x8:/job/Cebu-8x8-Asia/C--Software-Engineer_R2770",
     "8x8:/job/Cebu-8x8-Asia/C--Software-Engineer_R2771",
@@ -2222,6 +2222,7 @@
     "cisco:/job/Caesarea-Israel/ASIC-Physical-Design-Engineer_2017139",
     "cisco:/job/Caesarea-Israel/CAD-Engineer_2009617",
     "cisco:/job/Caesarea-Israel/DFT-Engineer---Cisco-Silicon-One_2024713",
+    "cisco:/job/Caesarea-Israel/DevOps-Infrastructure-Engineer_2027194",
     "cisco:/job/Caesarea-Israel/Engineering-Project-Manager_2022405",
     "cisco:/job/Caesarea-Israel/HW---LAB-Admin--NTN----Israel---ETR_2017821",
     "cisco:/job/Caesarea-Israel/HW---LAB-Admin--NTN----Israel---ETR_2017822",
@@ -11149,6 +11150,8 @@
     "microsoft:200057883",
     "microsoft:200057885",
     "microsoft:200057886",
+    "microsoft:200057888",
+    "microsoft:200057890",
     "microsoft:200057899",
     "microsoft:200057900",
     "microsoft:200057901",
@@ -11348,6 +11351,7 @@
     "microsoft:200058480",
     "microsoft:200058482",
     "microsoft:200058483",
+    "microsoft:200058487",
     "microsoft:200058493",
     "microsoft:200058495",
     "microsoft:200058496",
