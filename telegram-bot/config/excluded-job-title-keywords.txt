@@ -149,3 +149,45 @@ leader, services sales
 dc it support technician
 inside sales - representative
 responsable commercial
+
+# November 2: explicit administrative, sales, design and technical roles.
+receptionist
+asic physical design engineer
+web developer
+hr shared services
+labor relations consultant
+employment counsel
+head of growth marketing
+recruitment consultant
+business development rep
+user experience designer
+backend developer
+ingénieur développement logiciel
+administrateur système
+system administrator
+global legal associate
+administrateur réseaux
+ingénieur logiciel
+interaction designer
+director, government affairs
+help desk agent
+frontend developer
+legal services manager
+accounts assistant
+java fullstack developer
+senior manager, seo
+data analytics engineer
+enterprise sales solution specialist
+incubation sales leader
+audio signal processing engineer
+wafer-scale cryogenic probing engineer
+full stack developer
+asic layout engineer
+software-entwickler
+senior director, demand generation
+growth sales lead
+circuit design engineer
+motion designer
+travel agent
+sales development intern
+director, emea regional marketing

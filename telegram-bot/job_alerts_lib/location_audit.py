@@ -36,6 +36,15 @@ EUROPE_TERMS = (
     "saint petersburg, russian federation", "uk-remote", "remote from eu",
     "cork (irl)", "vimercate (flexible)", "échirolles, fr", "praha, cz",
     "wien, at", "aix en provence, fr", "six fours les plages, fr",
+    'courbevoie, fr',
+    'münchen, de',
+    'echirolles, fr',
+    'köln, de',
+    'neutal, at',
+    'puteaux, fr',
+    'nantes, fr',
+    'düzce, tr',
+    'villeurbanne cedex, fr',
 )
 
 # Ambiguous names such as Georgia are intentionally absent.
@@ -62,6 +71,24 @@ OUTSIDE_EUROPE_TERMS = (
     "cairo, eg", "dallas, tx",
     "hyderabad, in", "taguig city, ph", "johannesburg, mea, za",
     "seoul (flexible)", "bogota (flexible)", "casablanca, ma",
+    'virtual office (ontario)',
+    'remote (can-nb)',
+    'mississauga, ca',
+    'taipei, tw',
+    'brasil - remote',
+    'riyadh (flexible)',
+    'au-melbourne',
+    'thane belapur road, in',
+    'airoli, in',
+    'wellington (flexible)',
+    'auckland (flexible)',
+    'dalian, cn',
+    'virtual, cn',
+    'virtual, au',
+    'virtual, ph',
+    'manilla, ph',
+    'virtual, th',
+    'manilla, th',
 )
 
 
